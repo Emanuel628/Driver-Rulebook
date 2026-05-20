@@ -7,8 +7,11 @@ import type { ContentBlock, GuidePage, SavedHighlight } from '../types/content';
 import { AudioPlayer } from '../components/AudioPlayer';
 import { blockToPlainText, ContentBlockRenderer } from '../components/ContentBlockRenderer';
 
+type TextSize = 'normal' | 'large' | 'extra-large';
+
 type ArticleScreenProps = {
   theme: ThemeMode;
+  textSize: TextSize;
   page: GuidePage;
   showAudio: boolean;
   isPlaying: boolean;
@@ -37,51 +40,44 @@ const SWIPE_DISTANCE = 72;
 const SWIPE_VELOCITY = 520;
 const VERTICAL_FAIL_DISTANCE = 48;
 
-export function ArticleScreen({
-  theme,
-  page,
-  showAudio,
-  isPlaying,
-  highlights,
-  currentSegment,
-  totalSegments,
-  currentSegmentText,
-  previousPageTitle,
-  nextPageTitle,
-  checklistState,
-  isSaved,
-  onPreviousPage,
-  onNextPage,
-  onPlayPause,
-  onStop,
-  onBack,
-  onForward,
-  onToggleSavedPage,
-  onToggleChecklistItem,
-  onResetPageChecklist,
-  onSaveHighlight,
-  onEraseHighlight
-}: ArticleScreenProps) {
-  const palette = colors[theme];
+export function ArticleScreen(props: ArticleScreenProps) {
+  const {
+    theme,
+    textSize,
+    page,
+    showAudio,
+    isPlaying,
+    highlights,
+    currentSegment,
+    totalSegments,
+    currentSegmentText,
+    previousPageTitle,
+    nextPageTitle,
+    checklistState,
+    isSaved,
+    onPreviousPage,
+    onNextPage,
+    onPlayPause,
+    onStop,
+    onBack,
+    onForward,
+    onToggleSavedPage,
+    onToggleChecklistItem,
+    onResetPageChecklist,
+    onSaveHighlight,
+    onEraseHighlight
+  } = props;
 
+  const palette = colors[theme];
   const swipeGesture = Gesture.Pan()
     .activeOffsetX([-24, 24])
     .failOffsetY([-VERTICAL_FAIL_DISTANCE, VERTICAL_FAIL_DISTANCE])
     .onEnd(event => {
       const isHorizontal = Math.abs(event.translationX) > Math.abs(event.translationY) * 1.4;
-      if (!isHorizontal) return;
-
       const isStrongSwipe = Math.abs(event.translationX) > SWIPE_DISTANCE || Math.abs(event.velocityX) > SWIPE_VELOCITY;
-      if (!isStrongSwipe) return;
-
-      if (event.translationX < 0 && nextPageTitle) {
-        onNextPage();
-        return;
-      }
-
-      if (event.translationX > 0 && previousPageTitle) {
-        onPreviousPage();
-      }
+      if (!isHorizontal || !isStrongSwipe) return;
+      if (event.translationX < 0 && nextPageTitle) onNextPage();
+      if (event.translationX > 0 && previousPageTitle) onPreviousPage();
     });
 
   return (
@@ -101,33 +97,11 @@ export function ArticleScreen({
           </View>
 
           {showAudio && (
-            <AudioPlayer
-              theme={theme}
-              title={page.title}
-              isPlaying={isPlaying}
-              currentSegment={currentSegment}
-              totalSegments={totalSegments}
-              currentSegmentText={currentSegmentText}
-              onPlayPause={onPlayPause}
-              onStop={onStop}
-              onBack={onBack}
-              onForward={onForward}
-            />
+            <AudioPlayer theme={theme} title={page.title} isPlaying={isPlaying} currentSegment={currentSegment} totalSegments={totalSegments} currentSegmentText={currentSegmentText} onPlayPause={onPlayPause} onStop={onStop} onBack={onBack} onForward={onForward} />
           )}
 
           {page.content.map((block, index) => (
-            <ContentBlockRenderer
-              key={block.id}
-              theme={theme}
-              block={block}
-              pageId={page.id}
-              label={`Paragraph ${index + 1}`}
-              isHighlighted={highlights.some(item => item.pageId === page.id && item.paragraphId === block.id)}
-              checklistState={checklistState}
-              onSaveHighlight={() => onSaveHighlight(block, blockToPlainText(block))}
-              onEraseHighlight={() => onEraseHighlight(page.id, block.id)}
-              onToggleChecklistItem={onToggleChecklistItem}
-            />
+            <ContentBlockRenderer key={block.id} theme={theme} textSize={textSize} block={block} pageId={page.id} label={`Paragraph ${index + 1}`} isHighlighted={highlights.some(item => item.pageId === page.id && item.paragraphId === block.id)} checklistState={checklistState} onSaveHighlight={() => onSaveHighlight(block, blockToPlainText(block))} onEraseHighlight={() => onEraseHighlight(page.id, block.id)} onToggleChecklistItem={onToggleChecklistItem} />
           ))}
 
           <View style={[styles.sourceCard, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
@@ -140,23 +114,8 @@ export function ArticleScreen({
           </View>
 
           <View style={styles.pageControls}> 
-            <PageControlButton
-              theme={theme}
-              label="Previous"
-              title={previousPageTitle ?? 'First page'}
-              icon="chevron-back"
-              disabled={!previousPageTitle}
-              onPress={onPreviousPage}
-            />
-            <PageControlButton
-              theme={theme}
-              label="Next"
-              title={nextPageTitle ?? 'Last page'}
-              icon="chevron-forward"
-              disabled={!nextPageTitle}
-              onPress={onNextPage}
-              iconRight
-            />
+            <PageControlButton theme={theme} label="Previous" title={previousPageTitle ?? 'First page'} icon="chevron-back" disabled={!previousPageTitle} onPress={onPreviousPage} />
+            <PageControlButton theme={theme} label="Next" title={nextPageTitle ?? 'Last page'} icon="chevron-forward" disabled={!nextPageTitle} onPress={onNextPage} iconRight />
           </View>
         </ScrollView>
       </View>
@@ -164,145 +123,41 @@ export function ArticleScreen({
   );
 }
 
-type PageControlButtonProps = {
-  theme: ThemeMode;
-  label: string;
-  title: string;
-  icon: string;
-  disabled: boolean;
-  iconRight?: boolean;
-  onPress: () => void;
-};
+type PageControlButtonProps = { theme: ThemeMode; label: string; title: string; icon: string; disabled: boolean; iconRight?: boolean; onPress: () => void };
 
 function PageControlButton({ theme, label, title, icon, disabled, iconRight = false, onPress }: PageControlButtonProps) {
   const palette = colors[theme];
-  const content = (
-    <>
+  return (
+    <Pressable disabled={disabled} onPress={onPress} style={[styles.pageControlButton, { backgroundColor: disabled ? palette.bgAlt : palette.surface, borderColor: disabled ? palette.border : palette.accentSoft, opacity: disabled ? 0.58 : 1 }]}> 
       {!iconRight && <Ionicons name={icon as any} size={18} color={disabled ? palette.textSubtle : palette.text} />}
       <View style={styles.pageControlCopy}> 
         <Text style={[styles.pageControlLabel, { color: disabled ? palette.textSubtle : palette.accent }]}>{label}</Text>
         <Text numberOfLines={1} style={[styles.pageControlTitle, { color: disabled ? palette.textSubtle : palette.text }]}>{title}</Text>
       </View>
       {iconRight && <Ionicons name={icon as any} size={18} color={disabled ? palette.textSubtle : palette.text} />}
-    </>
-  );
-
-  return (
-    <Pressable
-      disabled={disabled}
-      onPress={onPress}
-      style={[styles.pageControlButton, { backgroundColor: disabled ? palette.bgAlt : palette.surface, borderColor: disabled ? palette.border : palette.accentSoft, opacity: disabled ? 0.58 : 1 }]}
-    >
-      {content}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1
-  },
-  scroll: {
-    flex: 1
-  },
-  content: {
-    gap: spacing.lg,
-    padding: spacing.lg,
-    paddingBottom: spacing.xxl
-  },
-  header: {
-    gap: spacing.sm,
-    paddingTop: spacing.md
-  },
-  headerTop: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.md,
-    justifyContent: 'space-between'
-  },
-  chapter: {
-    flex: 1,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 1,
-    textTransform: 'uppercase'
-  },
-  saveButton: {
-    alignItems: 'center',
-    borderRadius: radius.pill,
-    flexDirection: 'row',
-    gap: spacing.xs,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm
-  },
-  saveText: {
-    fontSize: 12,
-    fontWeight: '900'
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: '900',
-    lineHeight: 35
-  },
-  summary: {
-    fontSize: 16,
-    fontWeight: '600',
-    lineHeight: 24
-  },
-  sourceCard: {
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.sm,
-    padding: spacing.lg
-  },
-  sourceTitle: {
-    fontSize: 15,
-    fontWeight: '900'
-  },
-  sourceText: {
-    fontSize: 14,
-    fontWeight: '600'
-  },
-  resetButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    borderRadius: radius.pill,
-    flexDirection: 'row',
-    gap: spacing.xs,
-    marginTop: spacing.xs,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm
-  },
-  resetText: {
-    fontSize: 12,
-    fontWeight: '900'
-  },
-  pageControls: {
-    flexDirection: 'row',
-    gap: spacing.md
-  },
-  pageControlButton: {
-    alignItems: 'center',
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    flex: 1,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    minHeight: 74,
-    padding: spacing.md
-  },
-  pageControlCopy: {
-    flex: 1,
-    gap: 3
-  },
-  pageControlLabel: {
-    fontSize: 11,
-    fontWeight: '900',
-    letterSpacing: 0.6,
-    textTransform: 'uppercase'
-  },
-  pageControlTitle: {
-    fontSize: 13,
-    fontWeight: '800'
-  }
+  screen: { flex: 1 },
+  scroll: { flex: 1 },
+  content: { gap: spacing.lg, padding: spacing.lg, paddingBottom: spacing.xxl },
+  header: { gap: spacing.sm, paddingTop: spacing.md },
+  headerTop: { alignItems: 'center', flexDirection: 'row', gap: spacing.md, justifyContent: 'space-between' },
+  chapter: { flex: 1, fontSize: 12, fontWeight: '900', letterSpacing: 1, textTransform: 'uppercase' },
+  saveButton: { alignItems: 'center', borderRadius: radius.pill, flexDirection: 'row', gap: spacing.xs, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  saveText: { fontSize: 12, fontWeight: '900' },
+  title: { fontSize: 30, fontWeight: '900', lineHeight: 35 },
+  summary: { fontSize: 16, fontWeight: '600', lineHeight: 24 },
+  sourceCard: { borderRadius: radius.lg, borderWidth: 1, gap: spacing.sm, padding: spacing.lg },
+  sourceTitle: { fontSize: 15, fontWeight: '900' },
+  sourceText: { fontSize: 14, fontWeight: '600' },
+  resetButton: { alignItems: 'center', alignSelf: 'flex-start', borderRadius: radius.pill, flexDirection: 'row', gap: spacing.xs, marginTop: spacing.xs, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  resetText: { fontSize: 12, fontWeight: '900' },
+  pageControls: { flexDirection: 'row', gap: spacing.md },
+  pageControlButton: { alignItems: 'center', borderRadius: radius.lg, borderWidth: 1, flex: 1, flexDirection: 'row', gap: spacing.sm, minHeight: 74, padding: spacing.md },
+  pageControlCopy: { flex: 1, gap: 3 },
+  pageControlLabel: { fontSize: 11, fontWeight: '900', letterSpacing: 0.6, textTransform: 'uppercase' },
+  pageControlTitle: { fontSize: 13, fontWeight: '800' }
 });
