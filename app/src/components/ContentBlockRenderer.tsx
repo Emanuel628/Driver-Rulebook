@@ -50,7 +50,7 @@ export function ContentBlockRenderer({
         <Text style={[styles.title, { color: tone === 'warning' ? palette.warning : palette.text, fontSize: 15 * scale }]}>{title}</Text>
         <Pressable onPress={isHighlighted ? onEraseHighlight : onSaveHighlight} onLongPress={onSaveHighlight} style={[styles.highlightButton, { backgroundColor: palette.surfaceRaised }]}> 
           <Ionicons name={isHighlighted ? 'eraser-outline' : 'create-outline'} size={18} color={isHighlighted ? palette.warning : palette.text} />
-          <Text style={[styles.highlightButtonText, { color: isHighlighted ? palette.warning : palette.textSubtle }]}>{isHighlighted ? 'Erase' : 'Highlight'}</Text>
+          <Text style={[styles.highlightButtonText, { color: isHighlighted ? palette.warning : palette.textSubtle }]}>{isHighlighted ? 'Erase' : 'Save block'}</Text>
         </Pressable>
       </View>
 
