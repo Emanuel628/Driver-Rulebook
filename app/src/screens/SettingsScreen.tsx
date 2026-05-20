@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors, radius, spacing } from '../theme/tokens';
 import type { ThemeMode } from '../theme/tokens';
@@ -17,7 +18,7 @@ export function SettingsScreen({ theme, textSize, audioSpeed, onThemeChange, onT
   return (
     <ScrollView style={[styles.screen, { backgroundColor: palette.bg }]} contentContainerStyle={styles.content}> 
       <Text style={[styles.title, { color: palette.text }]}>Settings</Text>
-      <Text style={[styles.subtitle, { color: palette.textMuted }]}>Only the settings this app actually needs.</Text>
+      <Text style={[styles.subtitle, { color: palette.textMuted }]}>Only the settings this app actually needs. Changes are saved locally on this device.</Text>
 
       <SettingGroup theme={theme} title="Display">
         <Segment theme={theme} label="Theme" value={theme} options={['dark', 'light']} onChange={value => onThemeChange(value as ThemeMode)} />
@@ -35,7 +36,7 @@ export function SettingsScreen({ theme, textSize, audioSpeed, onThemeChange, onT
   );
 }
 
-type SettingGroupProps = { theme: ThemeMode; title: string; children: React.ReactNode };
+type SettingGroupProps = { theme: ThemeMode; title: string; children: ReactNode };
 
 function SettingGroup({ theme, title, children }: SettingGroupProps) {
   const palette = colors[theme];
