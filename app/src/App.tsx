@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomNav } from './components/BottomNav';
 import { DisclaimerModal } from './components/DisclaimerModal';
 import { HamburgerDrawer } from './components/HamburgerDrawer';
+import { TermsGate } from './components/TermsGate';
 import { TopBar } from './components/TopBar';
 import { drawerGroups, guidePageMap, guidePages } from './content/pages';
 import { colors } from './theme/tokens';
@@ -17,7 +18,7 @@ import { ListScreen } from './screens/ListScreen';
 import { SearchScreen } from './screens/SearchScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { clearHighlightsForParagraph, deleteHighlight, loadHighlights, saveHighlight } from './storage/highlightStorage';
-import { defaultPreferences, loadPreferences, savePreferences, type AppPreferences } from './storage/appStorage';
+import { defaultPreferences, loadPreferences, savePreferences, TERMS_VERSION, type AppPreferences } from './storage/appStorage';
 import { clampSegmentIndex, splitAudioScript } from './utils/listenMode';
 import { searchGuidePages } from './utils/search';
 
@@ -38,6 +39,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const palette = colors[theme];
+  const termsAccepted = preferences.acceptedTerms && preferences.acceptedTermsVersion === TERMS_VERSION;
   const activePage = guidePageMap[activePageId] ?? guidePages[0];
   const activePageIndex = guidePages.findIndex(page => page.id === activePage.id);
   const previousPage = activePageIndex > 0 ? guidePages[activePageIndex - 1] : undefined;
@@ -90,6 +92,15 @@ export default function App() {
   const handleAudioSpeedChange = (nextAudioSpeed: AppPreferences['audioSpeed']) => {
     setAudioSpeed(nextAudioSpeed);
     updatePreferences({ audioSpeed: nextAudioSpeed });
+  };
+
+  const handleAcceptTerms = () => {
+    updatePreferences({
+      acceptedTerms: true,
+      acceptedTermsVersion: TERMS_VERSION,
+      acceptedTermsAt: new Date().toISOString(),
+      acknowledgedDisclaimer: true
+    });
   };
 
   const handleAcceptDisclaimer = () => {
@@ -349,7 +360,8 @@ export default function App() {
               setSettingsOpen(true);
             }}
           />
-          <DisclaimerModal visible={!preferences.acknowledgedDisclaimer} theme={theme} onAccept={handleAcceptDisclaimer} />
+          <DisclaimerModal visible={termsAccepted && !preferences.acknowledgedDisclaimer} theme={theme} onAccept={handleAcceptDisclaimer} />
+          <TermsGate visible={!termsAccepted} theme={theme} onAccept={handleAcceptTerms} />
         </View>
       </SafeAreaView>
     </GestureHandlerRootView>
