@@ -125,11 +125,45 @@ const hosBasicsPage: GuidePage = {
   lastReviewed: '2026-05-20'
 };
 
+const elevenHourRulePage: GuidePage = {
+  id: 'eleven-hour-rule',
+  chapter: 4,
+  title: '11-Hour Driving Limit',
+  category: 'hos',
+  summary: 'The 11-hour rule limits driving time for many property-carrying drivers after 10 consecutive hours off duty.',
+  content: [
+    { id: 'eleven-hour-rule-p1', type: 'summary', title: 'The basic rule', text: 'For many property-carrying drivers under the federal HOS rules, a driver may drive a maximum of 11 hours after 10 consecutive hours off duty. This is a driving-time limit, not a total-workday limit.' },
+    { id: 'eleven-hour-rule-p2', type: 'warning', title: 'This is not the only clock', text: 'A driver can have some of the 11 hours left and still be unable to drive because the 14-hour window has ended, the 30-minute break rule has been triggered, the 60/70-hour cycle limit has been reached, or an employer/state rule is stricter.' },
+    { id: 'eleven-hour-rule-p3', type: 'paragraph', text: 'The 11-hour limit applies to driving time. A driver may perform on-duty, non-driving work during the duty period, but that does not increase the maximum driving time allowed under the 11-hour driving limit.' },
+    { id: 'eleven-hour-rule-p4', type: 'paragraph', text: 'The 11-hour driving clock is tied to a qualifying off-duty period. FMCSA summarizes the property-carrying rule as 11 hours of driving after 10 consecutive hours off duty. If the driver has not had the required off-duty period, do not assume a new 11-hour driving allowance has started.' },
+    { id: 'eleven-hour-rule-p5', type: 'paragraph', text: 'The 11-hour limit runs inside the 14-hour driving window for many property-carrying drivers. During that window, the driver may use up to 11 hours of driving time, but driving generally may not continue past the 14th consecutive hour after coming on duty following 10 consecutive hours off duty.' },
+    { id: 'eleven-hour-rule-p6', type: 'paragraph', text: 'A normal break does not create more than 11 hours of driving time. A 30-minute break may satisfy the break rule if it qualifies, but it does not add extra driving hours to the 11-hour maximum.' },
+    { id: 'eleven-hour-rule-p7', type: 'paragraph', text: 'The adverse driving conditions exception may allow certain drivers to extend the 11-hour driving limit and 14-hour driving window by up to 2 hours when the exception truly applies. It is not a general permission to drive longer whenever a trip is delayed.' },
+    { id: 'eleven-hour-rule-p8', type: 'paragraph', text: 'Passenger-carrying rules are different. FMCSA summaries distinguish the 11-hour property-carrying driving limit from the 10-hour driving limit for passenger-carrying drivers. Do not apply the property-carrying 11-hour rule to passenger operations without checking the correct rule.' },
+    { id: 'eleven-hour-rule-p9', type: 'example', title: 'Example: driving time left, window expired', text: 'A property-carrying driver has used only 9 hours of driving time, but the 14-hour window has ended. The driver may still be blocked from driving even though 2 hours remain on the 11-hour driving limit.' },
+    { id: 'eleven-hour-rule-p10', type: 'example', title: 'Example: on-duty work does not count as driving time', text: 'A driver spends 3 hours loading, then drives 6 hours. The loading time is not driving time, but it can still affect the 14-hour window and the 60/70-hour cycle. The driver has used 6 of the 11 driving hours, not 9.' },
+    { id: 'eleven-hour-rule-p11', type: 'example', title: 'Example: break does not add driving time', text: 'A driver uses 10.5 hours of driving time, takes a qualifying 30-minute break, and then wants to drive 1 more hour. The break may help with the break rule, but the driver still cannot exceed the 11-hour driving limit unless a valid exception applies.' },
+    { id: 'eleven-hour-rule-p12', type: 'checklist', title: 'Before saying the driver can keep driving', items: ['Confirm this is a property-carrying operation subject to the federal 11-hour rule.', 'Confirm the driver had 10 consecutive hours off duty before the current driving period.', 'Add only driving time toward the 11-hour driving limit.', 'Check the 14-hour window separately.', 'Check whether the 30-minute break rule has been triggered.', 'Check the 60/70-hour cycle limit separately.', 'Use an exception only when the official requirements for that exception are met.'] },
+    { id: 'eleven-hour-rule-p13', type: 'warning', title: 'Do not round this into a slogan', text: 'The rule is not simply “you can drive 11 hours every day.” The correct question is whether the driver is covered, whether the required off-duty time occurred, how much driving time was used, and whether any other HOS limit or exception changes the answer.' }
+  ],
+  audioScript: '11-hour driving limit. For many property-carrying drivers under federal hours-of-service rules, the driver may drive a maximum of 11 hours after 10 consecutive hours off duty. This is a driving-time limit, not a total workday limit. A driver can still be unable to drive if the 14-hour window has ended, the 30-minute break rule applies, or the 60 or 70-hour cycle limit has been reached. A break does not add more than 11 hours of driving time. Passenger-carrying rules are different. Verify the official FMCSA source before relying on the rule.',
+  tags: ['11 hour driving limit', 'eleven hour', 'hos', 'property carrying', '10 consecutive hours off duty', '14 hour window', 'driving time', 'adverse driving conditions', 'passenger carrying'],
+  sources: [
+    { title: 'Summary of Hours of Service Regulations', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/summary-hours-service-regulations', note: 'FMCSA summary stating the property-carrying 11-hour driving limit after 10 consecutive hours off duty.' },
+    { title: 'Hours of Service', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-of-service', note: 'Official FMCSA HOS topic page.' },
+    { title: 'The Motor Carrier Safety Planner - HOS Rules for Property-Carrying Operations', agency: 'FMCSA', url: 'https://csa.fmcsa.dot.gov/safetyplanner/myfiles/subsections.aspx?ch=23&sec=69&sub=176', note: 'FMCSA safety planner summary of the 11-hour and 14-hour property-carrying limits.' },
+    { title: 'Interstate Truck Driver\'s Guide to Hours of Service', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/interstate-truck-drivers-guide-hours-service', note: 'FMCSA guide summarizing Part 395 HOS rules for property-carrying CMVs.' },
+    { title: '49 CFR Part 395 - Hours of Service of Drivers', agency: 'eCFR', url: 'https://www.ecfr.gov/current/title-49/subtitle-B/chapter-III/subchapter-B/part-395', note: 'Official eCFR regulatory text for federal HOS rules.' },
+    { title: 'ELD - Educational Tool for Hours of Service', agency: 'FMCSA', url: 'https://eld.fmcsa.dot.gov/HOSRuleTool', note: 'FMCSA educational tool distinguishing property-carrying and passenger-carrying HOS concepts.' }
+  ],
+  lastReviewed: '2026-05-20'
+};
+
 export const guidePages: GuidePage[] = [
   indexQuickStartPage,
   basicTermsPage,
   hosBasicsPage,
-  makePage('eleven-hour-rule', 4, '11-Hour Driving Limit', 'hos', 'The basic daily driving limit.'),
+  elevenHourRulePage,
   makePage('fourteen-hour-window', 5, '14-Hour Window', 'hos', 'The duty window drivers commonly confuse with drive time.'),
   makePage('thirty-minute-break', 6, '30-Minute Break Rule', 'hos', 'Break timing and common confusion.'),
   makePage('sixty-seventy-recap', 7, '60/70-Hour Rule and Recap', 'hos', 'Cycle hours and recap basics.'),
