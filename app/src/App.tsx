@@ -3,6 +3,7 @@ import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomNav } from './components/BottomNav';
+import { DisclaimerModal } from './components/DisclaimerModal';
 import { HamburgerDrawer } from './components/HamburgerDrawer';
 import { TopBar } from './components/TopBar';
 import { drawerGroups, guidePageMap, guidePages } from './content/pages';
@@ -13,12 +14,16 @@ import { ArticleScreen } from './screens/ArticleScreen';
 import { HighlightsScreen } from './screens/HighlightsScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { ListScreen } from './screens/ListScreen';
+import { SearchScreen } from './screens/SearchScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { clearHighlightsForParagraph, deleteHighlight, loadHighlights, saveHighlight } from './storage/highlightStorage';
+import { defaultPreferences, loadPreferences, savePreferences, type AppPreferences } from './storage/appStorage';
 import { clampSegmentIndex, splitAudioScript } from './utils/listenMode';
+import { searchGuidePages } from './utils/search';
 
 export default function App() {
-  const [theme, setTheme] = useState<ThemeMode>('dark');
+  const [preferences, setPreferences] = useState<AppPreferences>(defaultPreferences);
+  const [theme, setTheme] = useState<ThemeMode>(defaultPreferences.theme);
   const [activeTab, setActiveTab] = useState<MainTab>('home');
   const [activePageId, setActivePageId] = useState('index-quick-start');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -27,9 +32,10 @@ export default function App() {
   const [audioOpen, setAudioOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSegment, setCurrentSegment] = useState(0);
-  const [textSize, setTextSize] = useState<'normal' | 'large' | 'extra-large'>('normal');
-  const [audioSpeed, setAudioSpeed] = useState<'0.75x' | '1.0x' | '1.25x' | '1.5x'>('1.0x');
+  const [textSize, setTextSize] = useState<AppPreferences['textSize']>(defaultPreferences.textSize);
+  const [audioSpeed, setAudioSpeed] = useState<AppPreferences['audioSpeed']>(defaultPreferences.audioSpeed);
   const [highlights, setHighlights] = useState<SavedHighlight[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const palette = colors[theme];
   const activePage = guidePageMap[activePageId] ?? guidePages[0];
@@ -38,9 +44,23 @@ export default function App() {
   const nextPage = activePageIndex >= 0 && activePageIndex < guidePages.length - 1 ? guidePages[activePageIndex + 1] : undefined;
   const audioSegments = useMemo(() => splitAudioScript(activePage.audioScript), [activePage.audioScript]);
   const activeAudioSegment = audioSegments[currentSegment] ?? audioSegments[0] ?? '';
+  const searchResults = useMemo(() => searchGuidePages(guidePages, searchQuery), [searchQuery]);
+  const savedPages = useMemo(
+    () => preferences.savedPageIds.map(pageId => guidePageMap[pageId]).filter(Boolean),
+    [preferences.savedPageIds]
+  );
+  const activePageSaved = preferences.savedPageIds.includes(activePage.id);
 
   useEffect(() => {
     loadHighlights().then(setHighlights).catch(() => setHighlights([]));
+    loadPreferences()
+      .then(loaded => {
+        setPreferences(loaded);
+        setTheme(loaded.theme);
+        setTextSize(loaded.textSize);
+        setAudioSpeed(loaded.audioSpeed);
+      })
+      .catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -48,6 +68,33 @@ export default function App() {
     setIsPlaying(false);
     setCurrentSegment(0);
   }, [activePageId]);
+
+  const updatePreferences = (patch: Partial<AppPreferences>) => {
+    setPreferences(current => {
+      const next = { ...current, ...patch };
+      savePreferences(next).catch(() => undefined);
+      return next;
+    });
+  };
+
+  const handleThemeChange = (nextTheme: ThemeMode) => {
+    setTheme(nextTheme);
+    updatePreferences({ theme: nextTheme });
+  };
+
+  const handleTextSizeChange = (nextTextSize: AppPreferences['textSize']) => {
+    setTextSize(nextTextSize);
+    updatePreferences({ textSize: nextTextSize });
+  };
+
+  const handleAudioSpeedChange = (nextAudioSpeed: AppPreferences['audioSpeed']) => {
+    setAudioSpeed(nextAudioSpeed);
+    updatePreferences({ audioSpeed: nextAudioSpeed });
+  };
+
+  const handleAcceptDisclaimer = () => {
+    updatePreferences({ acknowledgedDisclaimer: true });
+  };
 
   const pageTitle = useMemo(() => {
     if (settingsOpen) return 'Settings';
@@ -79,6 +126,29 @@ export default function App() {
   const openNextPage = () => {
     if (!nextPage) return;
     openPage(nextPage.id);
+  };
+
+  const toggleSavedPage = () => {
+    const savedPageIds = activePageSaved
+      ? preferences.savedPageIds.filter(pageId => pageId !== activePage.id)
+      : [activePage.id, ...preferences.savedPageIds];
+
+    updatePreferences({ savedPageIds });
+  };
+
+  const toggleChecklistItem = (itemKey: string) => {
+    updatePreferences({
+      checklistState: {
+        ...preferences.checklistState,
+        [itemKey]: !preferences.checklistState[itemKey]
+      }
+    });
+  };
+
+  const resetPageChecklist = () => {
+    const pagePrefix = `${activePage.id}:`;
+    const nextState = Object.fromEntries(Object.entries(preferences.checklistState).filter(([key]) => !key.startsWith(pagePrefix)));
+    updatePreferences({ checklistState: nextState });
   };
 
   const speakSegment = (segmentIndex: number) => {
@@ -171,9 +241,9 @@ export default function App() {
           theme={theme}
           textSize={textSize}
           audioSpeed={audioSpeed}
-          onThemeChange={setTheme}
-          onTextSizeChange={setTextSize}
-          onAudioSpeedChange={setAudioSpeed}
+          onThemeChange={handleThemeChange}
+          onTextSizeChange={handleTextSizeChange}
+          onAudioSpeedChange={handleAudioSpeedChange}
         />
       );
     }
@@ -206,12 +276,17 @@ export default function App() {
           currentSegmentText={activeAudioSegment}
           previousPageTitle={previousPage?.title}
           nextPageTitle={nextPage?.title}
+          checklistState={preferences.checklistState}
+          isSaved={activePageSaved}
           onPreviousPage={openPreviousPage}
           onNextPage={openNextPage}
           onPlayPause={playOrPause}
           onStop={stopSpeech}
           onBack={playPreviousSegment}
           onForward={playNextSegment}
+          onToggleSavedPage={toggleSavedPage}
+          onToggleChecklistItem={toggleChecklistItem}
+          onResetPageChecklist={resetPageChecklist}
           onSaveHighlight={handleSaveHighlight}
           onEraseHighlight={handleEraseParagraphHighlights}
         />
@@ -220,15 +295,14 @@ export default function App() {
 
     if (activeTab === 'checklists') {
       const pages = guidePages.filter(page => page.category === 'checklists');
-      return <ListScreen theme={theme} title="Checklists" subtitle="Visual shell for future checklist tools." pages={pages} onOpenPage={openPage} />;
+      return <ListScreen theme={theme} title="Checklists" subtitle="Interactive checklists and checklist guide pages." pages={pages} onOpenPage={openPage} />;
     }
 
     if (activeTab === 'search') {
-      return <ListScreen theme={theme} title="Search" subtitle="Search UI shell. Indexing comes after final content is added." pages={guidePages} onOpenPage={openPage} />;
+      return <SearchScreen theme={theme} query={searchQuery} results={searchResults} onQueryChange={setSearchQuery} onOpenPage={openPage} />;
     }
 
-    const savedPages = guidePages.slice(0, 0);
-    return <ListScreen theme={theme} title="Saved" subtitle="Saved topics will live on-device." pages={savedPages} emptyLabel="No saved topics yet." onOpenPage={openPage} />;
+    return <ListScreen theme={theme} title="Saved" subtitle="Pages saved locally on this device." pages={savedPages} emptyLabel="No saved pages yet." onOpenPage={openPage} />;
   };
 
   return (
@@ -274,6 +348,7 @@ export default function App() {
               setSettingsOpen(true);
             }}
           />
+          <DisclaimerModal visible={!preferences.acknowledgedDisclaimer} theme={theme} onAccept={handleAcceptDisclaimer} />
         </View>
       </SafeAreaView>
     </GestureHandlerRootView>
