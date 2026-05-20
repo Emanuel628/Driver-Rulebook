@@ -12,6 +12,9 @@ type ArticleScreenProps = {
   showAudio: boolean;
   isPlaying: boolean;
   highlights: SavedHighlight[];
+  currentSegment: number;
+  totalSegments: number;
+  currentSegmentText: string;
   onPlayPause: () => void;
   onStop: () => void;
   onBack: () => void;
@@ -20,7 +23,22 @@ type ArticleScreenProps = {
   onEraseHighlight: (pageId: string, paragraphId: string) => void;
 };
 
-export function ArticleScreen({ theme, page, showAudio, isPlaying, highlights, onPlayPause, onStop, onBack, onForward, onSaveHighlight, onEraseHighlight }: ArticleScreenProps) {
+export function ArticleScreen({
+  theme,
+  page,
+  showAudio,
+  isPlaying,
+  highlights,
+  currentSegment,
+  totalSegments,
+  currentSegmentText,
+  onPlayPause,
+  onStop,
+  onBack,
+  onForward,
+  onSaveHighlight,
+  onEraseHighlight
+}: ArticleScreenProps) {
   const palette = colors[theme];
 
   return (
@@ -36,6 +54,9 @@ export function ArticleScreen({ theme, page, showAudio, isPlaying, highlights, o
           theme={theme}
           title={page.title}
           isPlaying={isPlaying}
+          currentSegment={currentSegment}
+          totalSegments={totalSegments}
+          currentSegmentText={currentSegmentText}
           onPlayPause={onPlayPause}
           onStop={onStop}
           onBack={onBack}
