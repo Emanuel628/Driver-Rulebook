@@ -19,6 +19,7 @@ import { ghsVsDotPage } from './chapter22';
 import { checklistsPage } from './chapter23';
 import { scenarioExamplesPage } from './chapter24';
 import { glossaryPage } from './chapter25';
+import { sourcesUpdatesPage } from './chapter26';
 
 const researchedPages: GuidePage[] = [
   sixtySeventyRecapPage,
@@ -39,7 +40,8 @@ const researchedPages: GuidePage[] = [
   ghsVsDotPage,
   checklistsPage,
   scenarioExamplesPage,
-  glossaryPage
+  glossaryPage,
+  sourcesUpdatesPage
 ];
 
 const phmsaChart16Note = 'Official PHMSA general guidance chart. Verify actual compliance against current 49 CFR hazardous materials regulations.';
