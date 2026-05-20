@@ -14,6 +14,7 @@ import { HomeScreen } from './screens/HomeScreen';
 import { ListScreen } from './screens/ListScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { clearHighlightsForParagraph, deleteHighlight, loadHighlights, saveHighlight } from './storage/highlightStorage';
+import { clampSegmentIndex, splitAudioScript } from './utils/listenMode';
 
 export default function App() {
   const [theme, setTheme] = useState<ThemeMode>('dark');
@@ -24,16 +25,25 @@ export default function App() {
   const [highlightsOpen, setHighlightsOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentSegment, setCurrentSegment] = useState(0);
   const [textSize, setTextSize] = useState<'normal' | 'large' | 'extra-large'>('normal');
   const [audioSpeed, setAudioSpeed] = useState<'0.75x' | '1.0x' | '1.25x' | '1.5x'>('1.0x');
   const [highlights, setHighlights] = useState<SavedHighlight[]>([]);
 
   const palette = colors[theme];
   const activePage = guidePageMap[activePageId] ?? guidePages[0];
+  const audioSegments = useMemo(() => splitAudioScript(activePage.audioScript), [activePage.audioScript]);
+  const activeAudioSegment = audioSegments[currentSegment] ?? audioSegments[0] ?? '';
 
   useEffect(() => {
     loadHighlights().then(setHighlights).catch(() => setHighlights([]));
   }, []);
+
+  useEffect(() => {
+    Speech.stop();
+    setIsPlaying(false);
+    setCurrentSegment(0);
+  }, [activePageId]);
 
   const pageTitle = useMemo(() => {
     if (settingsOpen) return 'Settings';
@@ -54,6 +64,34 @@ export default function App() {
     setHighlightsOpen(false);
     setDrawerOpen(false);
     setAudioOpen(false);
+    setCurrentSegment(0);
+  };
+
+  const speakSegment = (segmentIndex: number) => {
+    const safeIndex = clampSegmentIndex(segmentIndex, audioSegments.length);
+    const text = audioSegments[safeIndex];
+    if (!text) return;
+
+    Speech.stop();
+    setCurrentSegment(safeIndex);
+    setAudioOpen(true);
+    setIsPlaying(true);
+    const rate = Number(audioSpeed.replace('x', ''));
+
+    Speech.speak(text, {
+      rate,
+      onDone: () => {
+        const nextIndex = safeIndex + 1;
+        if (nextIndex < audioSegments.length) {
+          speakSegment(nextIndex);
+          return;
+        }
+
+        setIsPlaying(false);
+      },
+      onStopped: () => setIsPlaying(false),
+      onError: () => setIsPlaying(false)
+    });
   };
 
   const stopSpeech = () => {
@@ -67,15 +105,15 @@ export default function App() {
       return;
     }
 
-    setAudioOpen(true);
-    setIsPlaying(true);
-    const rate = Number(audioSpeed.replace('x', ''));
-    Speech.speak(activePage.audioScript, {
-      rate,
-      onDone: () => setIsPlaying(false),
-      onStopped: () => setIsPlaying(false),
-      onError: () => setIsPlaying(false)
-    });
+    speakSegment(currentSegment);
+  };
+
+  const playPreviousSegment = () => {
+    speakSegment(currentSegment - 1);
+  };
+
+  const playNextSegment = () => {
+    speakSegment(currentSegment + 1);
   };
 
   const handleSaveHighlight = async (block: ContentBlock, selectedText: string) => {
@@ -149,10 +187,13 @@ export default function App() {
           showAudio={audioOpen}
           isPlaying={isPlaying}
           highlights={highlights}
+          currentSegment={currentSegment}
+          totalSegments={audioSegments.length}
+          currentSegmentText={activeAudioSegment}
           onPlayPause={playOrPause}
           onStop={stopSpeech}
-          onBack={() => undefined}
-          onForward={() => undefined}
+          onBack={playPreviousSegment}
+          onForward={playNextSegment}
           onSaveHighlight={handleSaveHighlight}
           onEraseHighlight={handleEraseParagraphHighlights}
         />
