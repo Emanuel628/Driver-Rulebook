@@ -14,7 +14,7 @@ const makePage = (
   title,
   category,
   summary,
-  content: [{ type: 'paragraph', text: placeholderContent }],
+  content: [{ id: `${id}-p1`, type: 'paragraph', text: placeholderContent }],
   audioScript: `${title}. ${summary}. Content will be added after source research.`,
   tags: [title.toLowerCase()],
   sources: [],
