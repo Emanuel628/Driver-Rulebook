@@ -5,7 +5,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build:web": "expo export --platform web --output-dir dist --base-url /Driver-Rulebook",
+    "build:web": "expo export --platform web --output-dir dist",
     "doctor": "expo-doctor"
   },
   "dependencies": {
