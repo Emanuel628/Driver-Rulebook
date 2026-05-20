@@ -4,19 +4,28 @@ import { sixtySeventyRecapPage } from './chapter7';
 import { resetRestartPage } from './chapter8';
 import { sleeperBerthPage } from './chapter9';
 import { hosExceptionsPage } from './chapter10';
+import { eldBasicsPage } from './chapter11';
 
-const researchedPages: GuidePage[] = [sixtySeventyRecapPage, resetRestartPage, sleeperBerthPage, hosExceptionsPage];
+const researchedPages: GuidePage[] = [
+  sixtySeventyRecapPage,
+  resetRestartPage,
+  sleeperBerthPage,
+  hosExceptionsPage,
+  eldBasicsPage
+];
 
 const phmsaChart16Note = 'Official PHMSA general guidance chart. Verify actual compliance against current 49 CFR hazardous materials regulations.';
 
 function normalizeSourceNotes(page: GuidePage): GuidePage {
   return {
     ...page,
-    sources: page.sources.map(source =>
-      source.title.includes('DOT Chart 16')
-        ? { ...source, note: phmsaChart16Note }
-        : source
-    )
+    sources: page.sources.map(source => {
+      if (source.title.includes('DOT Chart 16')) {
+        return { ...source, note: phmsaChart16Note };
+      }
+
+      return source;
+    })
   };
 }
 
