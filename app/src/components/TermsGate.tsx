@@ -8,6 +8,41 @@ type TermsGateProps = {
   onAccept: () => void;
 };
 
+const legalSections = [
+  {
+    title: 'Educational reference only',
+    body: 'Driver Rulebook is a plain-English educational reference. It is not official training, legal advice, an ELD, a compliance certification tool, or a replacement for current regulations, company procedures, shipping papers, SDS documents, dispatch instructions, carrier safety policies, or qualified safety personnel.'
+  },
+  {
+    title: 'User responsibility',
+    body: 'You are responsible for verifying requirements before making safety, transport, hazmat, HOS, workplace, routing, placarding, inspection, or compliance decisions. Rules can vary by operation, cargo, state, route, employer policy, and current regulatory updates.'
+  },
+  {
+    title: 'Privacy: local-only app data',
+    body: 'This app does not require an account. It does not ask for your name, email address, phone number, location, contacts, photos, camera, microphone, advertising ID, or payment information. It does not intentionally track you, sell data, or use analytics.'
+  },
+  {
+    title: 'What is saved on this device',
+    body: 'Driver Rulebook saves app preferences, theme, text size, audio speed, saved pages, checklist progress, highlights, Terms acceptance status, Terms version, and Terms acceptance time in local device storage so the app can remember your choices.'
+  },
+  {
+    title: 'Security and device storage',
+    body: 'Because saved data stays on this device, protect your phone with a passcode, Face ID, Touch ID, or device lock. Local app storage may be included in device backups depending on your iOS or Android settings. Deleting the app may delete local app data.'
+  },
+  {
+    title: 'No tracking or data sale',
+    body: 'Driver Rulebook does not use ad tracking, behavioral tracking, third-party analytics, cross-app tracking, or data sale features. If future versions add accounts, cloud sync, analytics, crash reporting, ads, payments, or support forms, this notice and the app store disclosures must be updated before release.'
+  },
+  {
+    title: 'Official sources',
+    body: 'The app may link to official government and regulatory sources so you can verify information. External websites are controlled by their own operators and may have their own privacy practices.'
+  },
+  {
+    title: 'No guarantee of completeness',
+    body: 'Regulations and guidance can change. Content may be incomplete, outdated, or simplified. Always verify with current official sources and your employer before relying on information.'
+  }
+];
+
 export function TermsGate({ visible, theme, onAccept }: TermsGateProps) {
   if (!visible) return null;
 
@@ -17,23 +52,15 @@ export function TermsGate({ visible, theme, onAccept }: TermsGateProps) {
     <View style={[styles.screen, { backgroundColor: palette.bg }]}> 
       <ScrollView contentContainerStyle={styles.content}> 
         <Text style={[styles.kicker, { color: palette.accent }]}>Required before use</Text>
-        <Text style={[styles.title, { color: palette.text }]}>Terms of Service</Text>
-        <Text style={[styles.body, { color: palette.textMuted }]}>By using Driver Rulebook, you agree that this app is an educational reference only. It is not official training, legal advice, an ELD, or a replacement for current regulations, company procedures, shipping papers, SDS documents, or qualified safety personnel.</Text>
+        <Text style={[styles.title, { color: palette.text }]}>Terms, Privacy & Security</Text>
+        <Text style={[styles.body, { color: palette.textMuted }]}>You must agree before entering the app. Your agreement is saved locally on this device.</Text>
 
-        <View style={[styles.card, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
-          <Text style={[styles.cardTitle, { color: palette.text }]}>Privacy & local storage</Text>
-          <Text style={[styles.cardBody, { color: palette.textMuted }]}>Version 1 is local-first. The app saves preferences, saved pages, checklist status, highlights, and this agreement on this device. No account is required.</Text>
-        </View>
-
-        <View style={[styles.card, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
-          <Text style={[styles.cardTitle, { color: palette.text }]}>User responsibility</Text>
-          <Text style={[styles.cardBody, { color: palette.textMuted }]}>You are responsible for confirming requirements before making safety, transport, hazmat, HOS, workplace, or compliance decisions.</Text>
-        </View>
-
-        <View style={[styles.card, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
-          <Text style={[styles.cardTitle, { color: palette.text }]}>No guarantee</Text>
-          <Text style={[styles.cardBody, { color: palette.textMuted }]}>Content may become outdated or incomplete. Always verify with current official sources and your employer's procedures.</Text>
-        </View>
+        {legalSections.map(section => (
+          <View key={section.title} style={[styles.card, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
+            <Text style={[styles.cardTitle, { color: palette.text }]}>{section.title}</Text>
+            <Text style={[styles.cardBody, { color: palette.textMuted }]}>{section.body}</Text>
+          </View>
+        ))}
 
         <Pressable onPress={onAccept} style={[styles.button, { backgroundColor: palette.accent }]}> 
           <Text style={styles.buttonText}>I agree and continue</Text>
