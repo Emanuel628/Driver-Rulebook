@@ -11,10 +11,11 @@ type HamburgerDrawerProps = {
   pageMap: Record<string, GuidePage>;
   onClose: () => void;
   onSelectPage: (pageId: string) => void;
+  onOpenHighlights: () => void;
   onOpenSettings: () => void;
 };
 
-export function HamburgerDrawer({ visible, theme, groups, pageMap, onClose, onSelectPage, onOpenSettings }: HamburgerDrawerProps) {
+export function HamburgerDrawer({ visible, theme, groups, pageMap, onClose, onSelectPage, onOpenHighlights, onOpenSettings }: HamburgerDrawerProps) {
   if (!visible) return null;
 
   const palette = colors[theme];
@@ -48,6 +49,14 @@ export function HamburgerDrawer({ visible, theme, groups, pageMap, onClose, onSe
               })}
             </View>
           ))}
+
+          <View style={styles.group}> 
+            <Text style={[styles.groupTitle, { color: palette.textSubtle }]}>Highlights</Text>
+            <Pressable onPress={onOpenHighlights} style={[styles.pageLink, { backgroundColor: palette.surface }]}> 
+              <Text style={[styles.pageTitle, { color: palette.text }]}>Saved Highlights</Text>
+              <Ionicons name="create-outline" size={16} color={palette.textSubtle} />
+            </Pressable>
+          </View>
 
           <View style={styles.group}> 
             <Text style={[styles.groupTitle, { color: palette.textSubtle }]}>Settings</Text>
