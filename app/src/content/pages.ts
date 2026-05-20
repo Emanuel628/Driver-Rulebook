@@ -194,13 +194,48 @@ const fourteenHourWindowPage: GuidePage = {
   lastReviewed: '2026-05-20'
 };
 
+const thirtyMinuteBreakPage: GuidePage = {
+  id: 'thirty-minute-break',
+  chapter: 6,
+  title: '30-Minute Break Rule',
+  category: 'hos',
+  summary: 'The 30-minute break rule limits driving after 8 cumulative hours of driving without a qualifying 30-minute interruption.',
+  content: [
+    { id: 'thirty-minute-break-p1', type: 'summary', title: 'The basic rule', text: 'For many property-carrying drivers under federal HOS rules, driving is not permitted if more than 8 hours of driving time have passed without at least a consecutive 30-minute interruption in driving status. The break rule is based on driving time, not simply being on duty.' },
+    { id: 'thirty-minute-break-p2', type: 'warning', title: 'This is not a 30-minute off-duty-only rule', text: 'Current FMCSA materials say the required 30-minute break may be satisfied by a non-driving period of at least 30 consecutive minutes. That can include off duty, sleeper berth, on-duty not driving, or a consecutive combination of those non-driving statuses, depending on the situation.' },
+    { id: 'thirty-minute-break-p3', type: 'paragraph', text: 'The trigger is 8 cumulative hours of driving without at least a 30-minute interruption. This means the driver should look at driving time since the last qualifying interruption, not just the clock time since the shift started.' },
+    { id: 'thirty-minute-break-p4', type: 'paragraph', text: 'The break must be consecutive. Short non-driving stops that do not add up to a continuous 30-minute interruption do not satisfy the rule. Different qualifying non-driving statuses can be combined, but they must be consecutive.' },
+    { id: 'thirty-minute-break-p5', type: 'paragraph', text: 'On-duty not driving time can qualify as the 30-minute interruption under the current federal property-carrying rule. For example, time spent fueling, waiting, loading paperwork, or other non-driving work may qualify if it is recorded correctly, the driver is not driving, and the non-driving period is at least 30 consecutive minutes.' },
+    { id: 'thirty-minute-break-p6', type: 'paragraph', text: 'The 30-minute break does not restart the 14-hour window. A qualifying break may allow the driver to continue driving after the 8-hour driving threshold, but it usually does not extend the basic 14-hour driving window.' },
+    { id: 'thirty-minute-break-p7', type: 'paragraph', text: 'The 30-minute break does not create extra driving time. A driver still must stay under the 11-hour driving limit, the 14-hour window, and the 60/70-hour cycle limit unless a valid exception applies.' },
+    { id: 'thirty-minute-break-p8', type: 'paragraph', text: 'Short-haul exceptions can change whether the break rule applies. Federal text and FMCSA materials exclude drivers who qualify for certain short-haul exceptions from the 30-minute break requirement. Do not assume short-haul status applies just because the route is local.' },
+    { id: 'thirty-minute-break-p9', type: 'paragraph', text: 'Passenger-carrying HOS rules are different. This chapter is written around the federal property-carrying break rule. Always check the correct rule set before applying it to passenger operations.' },
+    { id: 'thirty-minute-break-p10', type: 'example', title: 'Example: qualifying on-duty break', text: 'A driver has accumulated 7 hours and 45 minutes of driving. The driver then spends 35 consecutive minutes on duty but not driving while fueling and doing paperwork. Under current federal property-carrying guidance, that non-driving period can satisfy the 30-minute interruption if recorded correctly and no driving occurs during the period.' },
+    { id: 'thirty-minute-break-p11', type: 'example', title: 'Example: not consecutive enough', text: 'A driver stops for 15 minutes, drives again, then later stops for another 15 minutes. Those two stops do not create one consecutive 30-minute interruption. The driver still needs a qualifying consecutive 30-minute interruption before driving beyond the threshold.' },
+    { id: 'thirty-minute-break-p12', type: 'example', title: 'Example: break does not extend the day', text: 'A driver takes a qualifying 30-minute break late in the shift. The break may clear the 8-hour driving interruption requirement, but the driver still may not drive past the 14-hour window under the basic rule.' },
+    { id: 'thirty-minute-break-p13', type: 'checklist', title: 'Quick 30-minute break check', items: ['Confirm this is a property-carrying operation subject to the federal break rule.', 'Check whether a short-haul exception or another official exception applies.', 'Count cumulative driving time since the last qualifying 30-minute interruption.', 'Confirm the break is at least 30 consecutive minutes.', 'Confirm the break is non-driving time: off duty, sleeper berth, on-duty not driving, or a consecutive combination.', 'Check the 14-hour window separately after the break.', 'Check the 11-hour and 60/70-hour limits separately.'] },
+    { id: 'thirty-minute-break-p14', type: 'warning', title: 'Do not use the break as a reset', text: 'The 30-minute break is only an interruption in driving status for the break rule. It is not a 10-hour reset, not a 34-hour restart, and not a free extension of the 11-hour or 14-hour limits.' }
+  ],
+  audioScript: '30-minute break rule. For many property-carrying drivers, driving is not permitted if more than 8 cumulative hours of driving time have passed without at least a consecutive 30-minute interruption in driving status. The break is based on driving time, not total on-duty time. Current federal guidance allows the break to be off duty, sleeper berth, on-duty not driving, or a consecutive combination of non-driving statuses. The break must be consecutive. It does not restart the 14-hour window, does not add driving time, and does not replace the 10-hour reset. Always verify whether an exception applies before acting.',
+  tags: ['30 minute break', 'thirty minute break', 'hos', '8 cumulative hours', 'driving time', 'interruption in driving status', 'on duty not driving', 'off duty', 'sleeper berth', 'consecutive', 'short haul'],
+  sources: [
+    { title: 'Summary of Hours of Service Regulations', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/summary-hours-service-regulations', note: 'FMCSA summary explaining the 30-minute break after 8 cumulative hours of driving and qualifying non-driving periods.' },
+    { title: 'When must a driver take a 30-minute break?', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/when-must-driver-take-30-minute-break', note: 'FMCSA FAQ answering that the break is after 8 cumulative hours of driving without at least a 30-minute break.' },
+    { title: 'Does the 30-minute break have to be consecutive?', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/does-30-minute-break-have-be-consecutive', note: 'FMCSA FAQ explaining consecutive break time and combinations of qualifying non-driving statuses.' },
+    { title: 'Does the 30-minute break count against the 14-hour driving window?', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/does-30-minute-break-count-against-14-hour-driving-window', note: 'FMCSA FAQ related to the break and the 14-hour window.' },
+    { title: 'Hours of Service Drivers Final Rule', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/hours-service-drivers-final-rule', note: 'FMCSA final rule summary of the 2020 break-rule change.' },
+    { title: '49 CFR Part 395 - Hours of Service of Drivers', agency: 'eCFR', url: 'https://www.ecfr.gov/current/title-49/subtitle-B/chapter-III/subchapter-B/part-395', note: 'Official eCFR regulatory text for federal HOS rules.' }
+  ],
+  lastReviewed: '2026-05-20'
+};
+
 export const guidePages: GuidePage[] = [
   indexQuickStartPage,
   basicTermsPage,
   hosBasicsPage,
   elevenHourRulePage,
   fourteenHourWindowPage,
-  makePage('thirty-minute-break', 6, '30-Minute Break Rule', 'hos', 'Break timing and common confusion.'),
+  thirtyMinuteBreakPage,
   makePage('sixty-seventy-recap', 7, '60/70-Hour Rule and Recap', 'hos', 'Cycle hours and recap basics.'),
   makePage('reset-restart', 8, '10-Hour Reset and 34-Hour Restart', 'hos', 'Daily reset versus cycle restart.'),
   makePage('sleeper-berth', 9, 'Sleeper Berth / Split Sleeper', 'hos', 'Advanced sleeper berth concepts.'),
