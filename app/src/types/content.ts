@@ -11,12 +11,12 @@ export type GuideCategory =
   | 'sources';
 
 export type ContentBlock =
-  | { type: 'paragraph'; text: string }
-  | { type: 'summary'; title: string; text: string }
-  | { type: 'warning'; title: string; text: string }
-  | { type: 'checklist'; title: string; items: string[] }
-  | { type: 'example'; title: string; text: string }
-  | { type: 'steps'; title: string; items: string[] };
+  | { id: string; type: 'paragraph'; text: string }
+  | { id: string; type: 'summary'; title: string; text: string }
+  | { id: string; type: 'warning'; title: string; text: string }
+  | { id: string; type: 'checklist'; title: string; items: string[] }
+  | { id: string; type: 'example'; title: string; text: string }
+  | { id: string; type: 'steps'; title: string; items: string[] };
 
 export type SourceRef = {
   title: string;
@@ -36,6 +36,18 @@ export type GuidePage = {
   tags: string[];
   sources: SourceRef[];
   lastReviewed: string;
+};
+
+export type SavedHighlight = {
+  id: string;
+  pageId: string;
+  pageTitle: string;
+  chapter: number;
+  paragraphId: string;
+  paragraphLabel: string;
+  selectedText: string;
+  note?: string;
+  createdAt: string;
 };
 
 export type DrawerGroup = {
