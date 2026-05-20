@@ -1,9 +1,9 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { colors, radius, spacing } from '../theme/tokens';
 import type { ThemeMode } from '../theme/tokens';
-import type { ContentBlock, GuidePage, SavedHighlight } from '../types/content';
+import type { ContentBlock, GuidePage, SavedHighlight, SourceRef } from '../types/content';
 import { AudioPlayer } from '../components/AudioPlayer';
 import { blockToPlainText, ContentBlockRenderer } from '../components/ContentBlockRenderer';
 
@@ -113,6 +113,8 @@ export function ArticleScreen(props: ArticleScreenProps) {
             </Pressable>
           </View>
 
+          <OfficialSources sources={page.sources} theme={theme} />
+
           <View style={styles.pageControls}> 
             <PageControlButton theme={theme} label="Previous" title={previousPageTitle ?? 'First page'} icon="chevron-back" disabled={!previousPageTitle} onPress={onPreviousPage} />
             <PageControlButton theme={theme} label="Next" title={nextPageTitle ?? 'Last page'} icon="chevron-forward" disabled={!nextPageTitle} onPress={onNextPage} iconRight />
@@ -121,6 +123,48 @@ export function ArticleScreen(props: ArticleScreenProps) {
       </View>
     </GestureDetector>
   );
+}
+
+type OfficialSourcesProps = { sources: SourceRef[]; theme: ThemeMode };
+
+function OfficialSources({ sources, theme }: OfficialSourcesProps) {
+  const palette = colors[theme];
+
+  if (sources.length === 0) {
+    return (
+      <View style={[styles.sourcesCard, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
+        <Text style={[styles.sourceTitle, { color: palette.text }]}>Official Sources</Text>
+        <Text style={[styles.sourceText, { color: palette.textMuted }]}>No official source links are attached to this page yet.</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.sourcesCard, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
+      <View style={styles.sourcesHeader}> 
+        <Ionicons name="shield-checkmark-outline" size={18} color={palette.accent} />
+        <Text style={[styles.sourceTitle, { color: palette.text }]}>Official Sources</Text>
+      </View>
+      <Text style={[styles.sourceText, { color: palette.textMuted }]}>Use these links to verify the current rule or agency guidance before making a real safety or compliance decision.</Text>
+
+      <View style={styles.sourcesList}> 
+        {sources.map(source => (
+          <Pressable key={`${source.agency}:${source.title}:${source.url}`} onPress={() => openSourceUrl(source.url)} style={[styles.sourceLink, { backgroundColor: palette.bgAlt, borderColor: palette.border }]}> 
+            <View style={styles.sourceLinkHeader}> 
+              <Text style={[styles.sourceAgency, { color: palette.accent }]}>{source.agency}</Text>
+              <Ionicons name="open-outline" size={16} color={palette.textSubtle} />
+            </View>
+            <Text style={[styles.sourceLinkTitle, { color: palette.text }]}>{source.title}</Text>
+            {source.note ? <Text style={[styles.sourceLinkNote, { color: palette.textMuted }]}>{source.note}</Text> : null}
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function openSourceUrl(url: string) {
+  Linking.openURL(url).catch(() => undefined);
 }
 
 type PageControlButtonProps = { theme: ThemeMode; label: string; title: string; icon: string; disabled: boolean; iconRight?: boolean; onPress: () => void };
@@ -152,9 +196,17 @@ const styles = StyleSheet.create({
   summary: { fontSize: 16, fontWeight: '600', lineHeight: 24 },
   sourceCard: { borderRadius: radius.lg, borderWidth: 1, gap: spacing.sm, padding: spacing.lg },
   sourceTitle: { fontSize: 15, fontWeight: '900' },
-  sourceText: { fontSize: 14, fontWeight: '600' },
+  sourceText: { fontSize: 14, fontWeight: '600', lineHeight: 21 },
   resetButton: { alignItems: 'center', alignSelf: 'flex-start', borderRadius: radius.pill, flexDirection: 'row', gap: spacing.xs, marginTop: spacing.xs, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
   resetText: { fontSize: 12, fontWeight: '900' },
+  sourcesCard: { borderRadius: radius.lg, borderWidth: 1, gap: spacing.md, padding: spacing.lg },
+  sourcesHeader: { alignItems: 'center', flexDirection: 'row', gap: spacing.sm },
+  sourcesList: { gap: spacing.sm },
+  sourceLink: { borderRadius: radius.md, borderWidth: 1, gap: spacing.xs, padding: spacing.md },
+  sourceLinkHeader: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  sourceAgency: { fontSize: 11, fontWeight: '900', letterSpacing: 0.8, textTransform: 'uppercase' },
+  sourceLinkTitle: { fontSize: 14, fontWeight: '900', lineHeight: 20 },
+  sourceLinkNote: { fontSize: 13, fontWeight: '600', lineHeight: 19 },
   pageControls: { flexDirection: 'row', gap: spacing.md },
   pageControlButton: { alignItems: 'center', borderRadius: radius.lg, borderWidth: 1, flex: 1, flexDirection: 'row', gap: spacing.sm, minHeight: 74, padding: spacing.md },
   pageControlCopy: { flex: 1, gap: 3 },
