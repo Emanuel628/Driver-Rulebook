@@ -4,11 +4,16 @@ import type { ThemeMode } from '../theme/tokens';
 type TextSize = 'normal' | 'large' | 'extra-large';
 type AudioSpeed = '0.75x' | '1.0x' | '1.25x' | '1.5x';
 
+export const TERMS_VERSION = '2026-05-20-v1';
+
 export type AppPreferences = {
   theme: ThemeMode;
   textSize: TextSize;
   audioSpeed: AudioSpeed;
   acknowledgedDisclaimer: boolean;
+  acceptedTerms: boolean;
+  acceptedTermsVersion: string | null;
+  acceptedTermsAt: string | null;
   savedPageIds: string[];
   checklistState: Record<string, boolean>;
 };
@@ -20,6 +25,9 @@ export const defaultPreferences: AppPreferences = {
   textSize: 'normal',
   audioSpeed: '1.0x',
   acknowledgedDisclaimer: false,
+  acceptedTerms: false,
+  acceptedTermsVersion: null,
+  acceptedTermsAt: null,
   savedPageIds: [],
   checklistState: {}
 };
