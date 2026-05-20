@@ -159,12 +159,47 @@ const elevenHourRulePage: GuidePage = {
   lastReviewed: '2026-05-20'
 };
 
+const fourteenHourWindowPage: GuidePage = {
+  id: 'fourteen-hour-window',
+  chapter: 5,
+  title: '14-Hour Window',
+  category: 'hos',
+  summary: 'The 14-hour window limits when many property-carrying drivers may drive after coming on duty.',
+  content: [
+    { id: 'fourteen-hour-window-p1', type: 'summary', title: 'The basic rule', text: 'For many property-carrying drivers under federal HOS rules, after coming on duty following 10 consecutive hours off duty, the driver generally may not drive beyond the 14th consecutive hour. This is often called the 14-hour driving window.' },
+    { id: 'fourteen-hour-window-p2', type: 'warning', title: 'The 14-hour window is not the same as the 11-hour limit', text: 'The 11-hour rule limits total driving time. The 14-hour rule limits the window of time in which that driving may happen. A driver can have driving time left and still be out of legal driving window.' },
+    { id: 'fourteen-hour-window-p3', type: 'paragraph', text: 'The 14-hour window starts when the driver comes on duty after the required qualifying off-duty period. It is based on consecutive time, not only time spent driving. Loading, fueling, inspections, paperwork, waiting while on duty, and other work can use up the window even when the truck is not moving.' },
+    { id: 'fourteen-hour-window-p4', type: 'paragraph', text: 'Under the normal property-carrying rule, off-duty time during the day does not extend the 14-hour period. A lunch break, waiting break, or ordinary 30-minute break may be useful for fatigue and may satisfy the break rule if it qualifies, but it usually does not pause or restart the 14-hour window.' },
+    { id: 'fourteen-hour-window-p5', type: 'paragraph', text: 'The 14-hour limit is about driving permission. A driver may still perform some non-driving work after the 14-hour window, but may not drive a CMV again until a qualifying rest period or an applicable exception allows it.' },
+    { id: 'fourteen-hour-window-p6', type: 'paragraph', text: 'A full 10 consecutive hours off duty is the normal way for a property-carrying driver to reset the daily driving window. Without that qualifying rest period, do not assume the next workday has a new 14-hour window.' },
+    { id: 'fourteen-hour-window-p7', type: 'paragraph', text: 'The sleeper berth exception can affect how the 14-hour window is calculated when used correctly. Current FMCSA materials describe split sleeper options where qualifying periods total at least 10 hours and neither qualifying period counts against the 14-hour window. This is an exception topic; use the sleeper berth chapter before relying on it.' },
+    { id: 'fourteen-hour-window-p8', type: 'paragraph', text: 'The adverse driving conditions exception may allow certain property-carrying drivers to extend the 14-hour driving window by up to 2 hours when the official requirements are met. It is not a general delay, traffic, detention, or bad-planning exception.' },
+    { id: 'fourteen-hour-window-p9', type: 'paragraph', text: 'Short-haul operations have their own conditions and recordkeeping exceptions. FMCSA materials describe a 150 air-mile short-haul exception with a maximum duty period condition. Do not assume “local” automatically means exempt from the HOS limits.' },
+    { id: 'fourteen-hour-window-p10', type: 'example', title: 'Example: the window expires before the driving time is used', text: 'A driver comes on duty at 6:00 a.m. after 10 consecutive hours off duty. Under the basic property-carrying rule, the 14-hour driving window reaches 8:00 p.m. If the driver has only used 8 driving hours by 8:00 p.m., the remaining 3 driving hours do not matter unless a valid exception applies.' },
+    { id: 'fourteen-hour-window-p11', type: 'example', title: 'Example: break does not restart the window', text: 'A driver comes on duty at 7:00 a.m., drives, loads, then takes a 1-hour off-duty meal break. Under the normal rule, that break does not move the 14-hour window later. The window is still based on the time the driver first came on duty after the qualifying rest period.' },
+    { id: 'fourteen-hour-window-p12', type: 'example', title: 'Example: non-driving work after the window', text: 'A driver reaches the end of the 14-hour window at a shipper. The driver may be allowed to do non-driving work, depending on the situation and company policy, but driving the CMV after the window is the problem.' },
+    { id: 'fourteen-hour-window-p13', type: 'checklist', title: 'Quick 14-hour window check', items: ['Identify when the driver came on duty after the last 10 consecutive hours off duty.', 'Count 14 consecutive hours from that time for the basic property-carrying window.', 'Do not subtract ordinary breaks from the window.', 'Check the 11-hour driving limit separately.', 'Check the 30-minute break rule separately.', 'Check the 60/70-hour cycle separately.', 'Use sleeper berth, adverse driving conditions, or short-haul exceptions only when all official conditions are met.'] },
+    { id: 'fourteen-hour-window-p14', type: 'warning', title: 'Do not treat detention as a pause button', text: 'Waiting at a shipper or receiver can create real-world problems, but ordinary detention does not automatically pause the 14-hour window. Check whether a specific rule or exception actually applies before assuming the driver can extend the day.' }
+  ],
+  audioScript: '14-hour window. For many property-carrying drivers, after coming on duty following 10 consecutive hours off duty, the driver generally may not drive beyond the 14th consecutive hour. This is different from the 11-hour driving limit. The 11-hour rule limits how much driving time may be used. The 14-hour window limits when that driving can happen. Ordinary breaks usually do not pause or restart the window. Sleeper berth, adverse driving conditions, and short-haul rules can change the answer only when their official requirements are met. Always verify before acting.',
+  tags: ['14 hour window', 'fourteen hour', 'hos', 'driving window', 'property carrying', '10 consecutive hours off duty', 'off duty does not extend', 'sleeper berth', 'adverse driving conditions', 'short haul', 'detention'],
+  sources: [
+    { title: 'Summary of Hours of Service Regulations', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/summary-hours-service-regulations', note: 'FMCSA summary stating drivers may not drive beyond the 14th consecutive hour after coming on duty following 10 consecutive hours off duty.' },
+    { title: 'The Motor Carrier Safety Planner - HOS Rules for Property-Carrying Operations', agency: 'FMCSA', url: 'https://csa.fmcsa.dot.gov/SafetyPlanner/MyFiles/SubSections.aspx?ch=23&eta=59085&sec=69&sub=176', note: 'FMCSA safety planner summary of the 14-hour driving window.' },
+    { title: 'Hours of Service Drivers Final Rule', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/hours-service-drivers-final-rule', note: 'FMCSA summary of 2020 HOS changes, including adverse driving, short-haul, break, and sleeper berth changes.' },
+    { title: 'How are split sleeper berth rest periods used in determining compliance with the 14-hour driving window rule?', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/how-are-split-sleeper-berth-rest-periods-used-determining-compliance-14', note: 'FMCSA FAQ for split sleeper and 14-hour window calculations.' },
+    { title: 'Does the 30-minute break count against the 14-hour driving window?', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/does-30-minute-break-count-against-14-hour-driving-window', note: 'FMCSA FAQ related to 2020 HOS changes.' },
+    { title: '49 CFR Part 395 - Hours of Service of Drivers', agency: 'eCFR', url: 'https://www.ecfr.gov/current/title-49/subtitle-B/chapter-III/subchapter-B/part-395', note: 'Official eCFR regulatory text for federal HOS rules.' }
+  ],
+  lastReviewed: '2026-05-20'
+};
+
 export const guidePages: GuidePage[] = [
   indexQuickStartPage,
   basicTermsPage,
   hosBasicsPage,
   elevenHourRulePage,
-  makePage('fourteen-hour-window', 5, '14-Hour Window', 'hos', 'The duty window drivers commonly confuse with drive time.'),
+  fourteenHourWindowPage,
   makePage('thirty-minute-break', 6, '30-Minute Break Rule', 'hos', 'Break timing and common confusion.'),
   makePage('sixty-seventy-recap', 7, '60/70-Hour Rule and Recap', 'hos', 'Cycle hours and recap basics.'),
   makePage('reset-restart', 8, '10-Hour Reset and 34-Hour Restart', 'hos', 'Daily reset versus cycle restart.'),
