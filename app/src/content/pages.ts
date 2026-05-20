@@ -21,8 +21,89 @@ const makePage = (
   lastReviewed: 'Not reviewed yet'
 });
 
+const indexQuickStartPage: GuidePage = {
+  id: 'index-quick-start',
+  chapter: 1,
+  title: 'Index / Quick Start',
+  category: 'quick-start',
+  summary: 'Start here when you need to quickly find the right driver-rule topic and verify it with official sources.',
+  content: [
+    {
+      id: 'index-quick-start-p1',
+      type: 'summary',
+      title: 'What this app is for',
+      text: 'Driver Rulebook is a plain-English reference for common trucking, hours-of-service, placarding, GHS, SDS, and dock-question situations. It is designed to help users find the right topic quickly, then verify the answer against official sources.'
+    },
+    {
+      id: 'index-quick-start-p2',
+      type: 'warning',
+      title: 'Always verify before acting',
+      text: 'This app is not official training, legal advice, an ELD, or a replacement for current regulations, shipping papers, SDS documents, company procedures, dispatch instructions, or qualified safety personnel. Rules can change and state or company requirements may be stricter.'
+    },
+    {
+      id: 'index-quick-start-p3',
+      type: 'steps',
+      title: 'How to use the guide',
+      items: [
+        'Use the hamburger menu to jump to a chapter.',
+        'Use Search when you know the term you are looking for.',
+        'Use Listen Mode when you want the page read aloud.',
+        'Save important pages for fast return later.',
+        'Use highlights and checklists for your own local notes and progress.',
+        'Open the Sources page when you need official verification links.'
+      ]
+    },
+    {
+      id: 'index-quick-start-p4',
+      type: 'example',
+      title: 'If the question is about driving time or breaks',
+      text: 'Start with the HOS chapter. Federal hours-of-service information comes from FMCSA and 49 CFR Part 395. The app separates basic HOS concepts, the 11-hour driving limit, the 14-hour window, the 30-minute break, cycle limits, resets, sleeper berth topics, exceptions, and ELD basics.'
+    },
+    {
+      id: 'index-quick-start-p5',
+      type: 'example',
+      title: 'If the question is about placards or transport labels',
+      text: 'Start with the Hazmat / Placards chapter. Placarding and many transport communication rules are tied to PHMSA hazardous materials regulations in 49 CFR Part 172. The app keeps shipping papers, labels, markings, placards, numbered placards, and bulk versus non-bulk questions separated so the user does not mix them together.'
+    },
+    {
+      id: 'index-quick-start-p6',
+      type: 'example',
+      title: 'If the question is about workplace chemical labels or SDS',
+      text: 'Start with the GHS / SDS chapter. OSHA Hazard Communication rules cover workplace chemical hazard communication, including labels and Safety Data Sheets. DOT transport labels and OSHA workplace labels are related safety systems, but they are not the same thing.'
+    },
+    {
+      id: 'index-quick-start-p7',
+      type: 'checklist',
+      title: 'Quick verification checklist',
+      items: [
+        'Identify whether the situation is HOS, placarding, GHS/SDS, or a company procedure issue.',
+        'Open the matching chapter instead of relying on memory.',
+        'Read the page warning and source status.',
+        'Check official source links when a real compliance decision is being made.',
+        'Follow employer procedures when they are stricter than the general guide.'
+      ]
+    },
+    {
+      id: 'index-quick-start-p8',
+      type: 'paragraph',
+      text: 'The safest way to use this app is as a pointer: find the issue, learn the plain-English concept, then confirm the current requirement from the official source or your company safety contact before making a decision.'
+    }
+  ],
+  audioScript: 'Index and quick start. Driver Rulebook is a plain-English reference for common driver-rule questions. It helps you find the right topic quickly, but it is not official training, legal advice, an ELD, or a replacement for current regulations or company procedures. If your question is about driving time or breaks, start with HOS. If it is about placards or transport labels, start with Hazmat and Placards. If it is about workplace chemical labels or Safety Data Sheets, start with GHS and SDS. Use the sources page to verify official information before acting.',
+  tags: ['index', 'quick start', 'hos', 'placards', 'ghs', 'sds', 'sources', 'verify'],
+  sources: [
+    { title: 'Hours of Service', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-of-service', note: 'Official FMCSA HOS topic page.' },
+    { title: 'Summary of Hours of Service Regulations', agency: 'FMCSA', url: 'https://www.fmcsa.dot.gov/regulations/hours-service/summary-hours-service-regulations', note: 'FMCSA summary table for property- and passenger-carrying drivers.' },
+    { title: 'DOT Chart 16 - Hazardous Materials Markings, Labeling and Placarding Guide', agency: 'PHMSA', url: 'https://www.phmsa.dot.gov/training/hazmat/dot-chart-16-hazardous-materials-markings-labeling-and-placarding-guide', note: 'Official PHMSA chart for markings, labels, and placards.' },
+    { title: '49 CFR Section 172.504 - General placarding requirements', agency: 'PHMSA', url: 'https://www.phmsa.dot.gov/regulations/title49/section/172504', note: 'Official PHMSA regulatory text page.' },
+    { title: 'Hazard Communication', agency: 'OSHA', url: 'https://www.osha.gov/hazcom/', note: 'Official OSHA Hazard Communication overview.' },
+    { title: 'Safety Data Sheets QuickCard', agency: 'OSHA', url: 'https://obis.osha.gov/Publications/HazComm_QuickCard_SafetyData.html', note: 'Official OSHA SDS overview.' }
+  ],
+  lastReviewed: '2026-05-20'
+};
+
 export const guidePages: GuidePage[] = [
-  makePage('index-quick-start', 1, 'Index / Quick Start', 'quick-start', 'Jump quickly to the right topic.'),
+  indexQuickStartPage,
   makePage('basic-terms', 2, 'Basic Terms', 'quick-start', 'Key terms used throughout the app.'),
   makePage('hos-basics', 3, 'HOS Basics', 'hos', 'Driver hours and duty status fundamentals.'),
   makePage('eleven-hour-rule', 4, '11-Hour Driving Limit', 'hos', 'The basic daily driving limit.'),
