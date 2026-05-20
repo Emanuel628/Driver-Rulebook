@@ -4,8 +4,8 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { colors, radius, spacing } from '../theme/tokens';
 import type { ThemeMode } from '../theme/tokens';
 import type { ContentBlock, GuidePage, SavedHighlight } from '../types/content';
-import { InfoCard } from '../components/InfoCard';
 import { AudioPlayer } from '../components/AudioPlayer';
+import { blockToPlainText, ContentBlockRenderer } from '../components/ContentBlockRenderer';
 
 type ArticleScreenProps = {
   theme: ThemeMode;
@@ -18,12 +18,17 @@ type ArticleScreenProps = {
   currentSegmentText: string;
   previousPageTitle?: string;
   nextPageTitle?: string;
+  checklistState: Record<string, boolean>;
+  isSaved: boolean;
   onPreviousPage: () => void;
   onNextPage: () => void;
   onPlayPause: () => void;
   onStop: () => void;
   onBack: () => void;
   onForward: () => void;
+  onToggleSavedPage: () => void;
+  onToggleChecklistItem: (itemKey: string) => void;
+  onResetPageChecklist: () => void;
   onSaveHighlight: (block: ContentBlock, selectedText: string) => void;
   onEraseHighlight: (pageId: string, paragraphId: string) => void;
 };
@@ -43,12 +48,17 @@ export function ArticleScreen({
   currentSegmentText,
   previousPageTitle,
   nextPageTitle,
+  checklistState,
+  isSaved,
   onPreviousPage,
   onNextPage,
   onPlayPause,
   onStop,
   onBack,
   onForward,
+  onToggleSavedPage,
+  onToggleChecklistItem,
+  onResetPageChecklist,
   onSaveHighlight,
   onEraseHighlight
 }: ArticleScreenProps) {
@@ -79,7 +89,13 @@ export function ArticleScreen({
       <View style={[styles.screen, { backgroundColor: palette.bg }]}> 
         <ScrollView style={styles.scroll} contentContainerStyle={styles.content}> 
           <View style={styles.header}> 
-            <Text style={[styles.chapter, { color: palette.accent }]}>Chapter {page.chapter}</Text>
+            <View style={styles.headerTop}> 
+              <Text style={[styles.chapter, { color: palette.accent }]}>Chapter {page.chapter}</Text>
+              <Pressable onPress={onToggleSavedPage} style={[styles.saveButton, { backgroundColor: palette.surfaceRaised }]}> 
+                <Ionicons name={isSaved ? 'bookmark' : 'bookmark-outline'} size={18} color={isSaved ? palette.warning : palette.text} />
+                <Text style={[styles.saveText, { color: isSaved ? palette.warning : palette.textSubtle }]}>{isSaved ? 'Saved' : 'Save'}</Text>
+              </Pressable>
+            </View>
             <Text style={[styles.title, { color: palette.text }]}>{page.title}</Text>
             <Text style={[styles.summary, { color: palette.textMuted }]}>{page.summary}</Text>
           </View>
@@ -99,22 +115,29 @@ export function ArticleScreen({
             />
           )}
 
-          <InfoCard theme={theme} title="Highlight mode" body="Long-press a paragraph block to save it as a highlight. Native drag-selection capture will be wired later with a platform text-selection bridge." tone="warning" />
-
           {page.content.map((block, index) => (
-            <HighlightableBlock
+            <ContentBlockRenderer
               key={block.id}
               theme={theme}
               block={block}
               pageId={page.id}
               label={`Paragraph ${index + 1}`}
               isHighlighted={highlights.some(item => item.pageId === page.id && item.paragraphId === block.id)}
-              onSave={() => onSaveHighlight(block, blockToText(block))}
-              onErase={() => onEraseHighlight(page.id, block.id)}
+              checklistState={checklistState}
+              onSaveHighlight={() => onSaveHighlight(block, blockToPlainText(block))}
+              onEraseHighlight={() => onEraseHighlight(page.id, block.id)}
+              onToggleChecklistItem={onToggleChecklistItem}
             />
           ))}
 
-          <InfoCard theme={theme} title="Source status" body={`Last reviewed: ${page.lastReviewed}`} />
+          <View style={[styles.sourceCard, { backgroundColor: palette.surface, borderColor: palette.border }]}> 
+            <Text style={[styles.sourceTitle, { color: palette.text }]}>Source status</Text>
+            <Text style={[styles.sourceText, { color: palette.textMuted }]}>Last reviewed: {page.lastReviewed}</Text>
+            <Pressable onPress={onResetPageChecklist} style={[styles.resetButton, { backgroundColor: palette.bgAlt }]}> 
+              <Ionicons name="refresh" size={16} color={palette.textSubtle} />
+              <Text style={[styles.resetText, { color: palette.textSubtle }]}>Reset this page checklist</Text>
+            </Pressable>
+          </View>
 
           <View style={styles.pageControls}> 
             <PageControlButton
@@ -175,43 +198,6 @@ function PageControlButton({ theme, label, title, icon, disabled, iconRight = fa
   );
 }
 
-type HighlightableBlockProps = {
-  theme: ThemeMode;
-  pageId: string;
-  block: ContentBlock;
-  label: string;
-  isHighlighted: boolean;
-  onSave: () => void;
-  onErase: () => void;
-};
-
-function HighlightableBlock({ theme, block, label, isHighlighted, onSave, onErase }: HighlightableBlockProps) {
-  const palette = colors[theme];
-  const text = blockToText(block);
-  const title = 'title' in block ? block.title : label;
-
-  return (
-    <View style={[styles.highlightCard, { backgroundColor: isHighlighted ? palette.accentSoft : palette.surface, borderColor: isHighlighted ? palette.accent : palette.border }]}> 
-      <View style={styles.highlightHeader}> 
-        <Text style={[styles.blockTitle, { color: palette.text }]}>{title}</Text>
-        <Pressable onPress={isHighlighted ? onErase : onSave} onLongPress={onSave} style={[styles.highlightButton, { backgroundColor: palette.surfaceRaised }]}> 
-          <Ionicons name={isHighlighted ? 'eraser-outline' : 'create-outline'} size={18} color={isHighlighted ? palette.warning : palette.text} />
-          <Text style={[styles.highlightButtonText, { color: isHighlighted ? palette.warning : palette.textSubtle }]}>{isHighlighted ? 'Erase' : 'Highlight'}</Text>
-        </Pressable>
-      </View>
-      <Text selectable onLongPress={onSave} style={[styles.blockText, { color: palette.textMuted }]}>{text}</Text>
-    </View>
-  );
-}
-
-function blockToText(block: ContentBlock): string {
-  if (block.type === 'checklist' || block.type === 'steps') {
-    return block.items.join('\n');
-  }
-
-  return block.text;
-}
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1
@@ -228,11 +214,30 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingTop: spacing.md
   },
+  headerTop: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.md,
+    justifyContent: 'space-between'
+  },
   chapter: {
+    flex: 1,
     fontSize: 12,
     fontWeight: '900',
     letterSpacing: 1,
     textTransform: 'uppercase'
+  },
+  saveButton: {
+    alignItems: 'center',
+    borderRadius: radius.pill,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm
+  },
+  saveText: {
+    fontSize: 12,
+    fontWeight: '900'
   },
   title: {
     fontSize: 30,
@@ -244,37 +249,31 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 24
   },
-  highlightCard: {
+  sourceCard: {
     borderRadius: radius.lg,
     borderWidth: 1,
-    gap: spacing.md,
+    gap: spacing.sm,
     padding: spacing.lg
   },
-  highlightHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.md,
-    justifyContent: 'space-between'
-  },
-  blockTitle: {
-    flex: 1,
+  sourceTitle: {
     fontSize: 15,
     fontWeight: '900'
   },
-  blockText: {
-    fontSize: 15,
-    fontWeight: '600',
-    lineHeight: 23
+  sourceText: {
+    fontSize: 14,
+    fontWeight: '600'
   },
-  highlightButton: {
+  resetButton: {
     alignItems: 'center',
+    alignSelf: 'flex-start',
     borderRadius: radius.pill,
     flexDirection: 'row',
     gap: spacing.xs,
+    marginTop: spacing.xs,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm
   },
-  highlightButtonText: {
+  resetText: {
     fontSize: 12,
     fontWeight: '900'
   },
