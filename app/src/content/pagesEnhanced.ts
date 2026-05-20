@@ -9,6 +9,7 @@ import { hazmatBasicsPage } from './chapter12';
 import { shippingPapersPage } from './chapter13';
 import { labelsMarkingsPlacardsPage } from './chapter14';
 import { numberedPlacardsPage } from './chapter15';
+import { bulkVsNonBulkPage } from './chapter16';
 
 const researchedPages: GuidePage[] = [
   sixtySeventyRecapPage,
@@ -19,7 +20,8 @@ const researchedPages: GuidePage[] = [
   hazmatBasicsPage,
   shippingPapersPage,
   labelsMarkingsPlacardsPage,
-  numberedPlacardsPage
+  numberedPlacardsPage,
+  bulkVsNonBulkPage
 ];
 
 const phmsaChart16Note = 'Official PHMSA general guidance chart. Verify actual compliance against current 49 CFR hazardous materials regulations.';
