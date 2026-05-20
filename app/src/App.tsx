@@ -7,7 +7,7 @@ import { DisclaimerModal } from './components/DisclaimerModal';
 import { HamburgerDrawer } from './components/HamburgerDrawer';
 import { TermsGate } from './components/TermsGate';
 import { TopBar } from './components/TopBar';
-import { drawerGroups, guidePageMap, guidePages } from './content/pages';
+import { drawerGroups, guidePageMap, guidePages } from './content/pagesEnhanced';
 import { colors } from './theme/tokens';
 import type { ThemeMode } from './theme/tokens';
 import type { ContentBlock, MainTab, SavedHighlight } from './types/content';
