@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
 import * as Speech from 'expo-speech';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomNav } from './components/BottomNav';
 import { HamburgerDrawer } from './components/HamburgerDrawer';
 import { TopBar } from './components/TopBar';
@@ -32,6 +33,9 @@ export default function App() {
 
   const palette = colors[theme];
   const activePage = guidePageMap[activePageId] ?? guidePages[0];
+  const activePageIndex = guidePages.findIndex(page => page.id === activePage.id);
+  const previousPage = activePageIndex > 0 ? guidePages[activePageIndex - 1] : undefined;
+  const nextPage = activePageIndex >= 0 && activePageIndex < guidePages.length - 1 ? guidePages[activePageIndex + 1] : undefined;
   const audioSegments = useMemo(() => splitAudioScript(activePage.audioScript), [activePage.audioScript]);
   const activeAudioSegment = audioSegments[currentSegment] ?? audioSegments[0] ?? '';
 
@@ -65,6 +69,16 @@ export default function App() {
     setDrawerOpen(false);
     setAudioOpen(false);
     setCurrentSegment(0);
+  };
+
+  const openPreviousPage = () => {
+    if (!previousPage) return;
+    openPage(previousPage.id);
+  };
+
+  const openNextPage = () => {
+    if (!nextPage) return;
+    openPage(nextPage.id);
   };
 
   const speakSegment = (segmentIndex: number) => {
@@ -190,6 +204,10 @@ export default function App() {
           currentSegment={currentSegment}
           totalSegments={audioSegments.length}
           currentSegmentText={activeAudioSegment}
+          previousPageTitle={previousPage?.title}
+          nextPageTitle={nextPage?.title}
+          onPreviousPage={openPreviousPage}
+          onNextPage={openNextPage}
           onPlayPause={playOrPause}
           onStop={stopSpeech}
           onBack={playPreviousSegment}
@@ -214,49 +232,51 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.bg }]}> 
-      <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} />
-      <View style={[styles.app, { backgroundColor: palette.bg }]}> 
-        <TopBar
-          title={pageTitle}
-          theme={theme}
-          onMenuPress={() => setDrawerOpen(true)}
-          onListenPress={() => {
-            setActiveTab('guides');
-            setSettingsOpen(false);
-            setHighlightsOpen(false);
-            setAudioOpen(true);
-          }}
-        />
-        <View style={styles.main}>{renderMain()}</View>
-        <BottomNav
-          activeTab={activeTab}
-          theme={theme}
-          onChange={tab => {
-            stopSpeech();
-            setSettingsOpen(false);
-            setHighlightsOpen(false);
-            setActiveTab(tab);
-            setAudioOpen(false);
-          }}
-        />
-        <HamburgerDrawer
-          visible={drawerOpen}
-          theme={theme}
-          groups={drawerGroups}
-          pageMap={guidePageMap}
-          onClose={() => setDrawerOpen(false)}
-          onSelectPage={openPage}
-          onOpenHighlights={openHighlights}
-          onOpenSettings={() => {
-            stopSpeech();
-            setDrawerOpen(false);
-            setHighlightsOpen(false);
-            setSettingsOpen(true);
-          }}
-        />
-      </View>
-    </SafeAreaView>
+    <GestureHandlerRootView style={styles.root}> 
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.bg }]}> 
+        <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} />
+        <View style={[styles.app, { backgroundColor: palette.bg }]}> 
+          <TopBar
+            title={pageTitle}
+            theme={theme}
+            onMenuPress={() => setDrawerOpen(true)}
+            onListenPress={() => {
+              setActiveTab('guides');
+              setSettingsOpen(false);
+              setHighlightsOpen(false);
+              setAudioOpen(true);
+            }}
+          />
+          <View style={styles.main}>{renderMain()}</View>
+          <BottomNav
+            activeTab={activeTab}
+            theme={theme}
+            onChange={tab => {
+              stopSpeech();
+              setSettingsOpen(false);
+              setHighlightsOpen(false);
+              setActiveTab(tab);
+              setAudioOpen(false);
+            }}
+          />
+          <HamburgerDrawer
+            visible={drawerOpen}
+            theme={theme}
+            groups={drawerGroups}
+            pageMap={guidePageMap}
+            onClose={() => setDrawerOpen(false)}
+            onSelectPage={openPage}
+            onOpenHighlights={openHighlights}
+            onOpenSettings={() => {
+              stopSpeech();
+              setDrawerOpen(false);
+              setHighlightsOpen(false);
+              setSettingsOpen(true);
+            }}
+          />
+        </View>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
@@ -266,6 +286,9 @@ function getParagraphLabel(content: ContentBlock[], paragraphId: string): string
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1
+  },
   safeArea: {
     flex: 1
   },
