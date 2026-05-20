@@ -267,6 +267,7 @@ export default function App() {
       return (
         <ArticleScreen
           theme={theme}
+          textSize={textSize}
           page={activePage}
           showAudio={audioOpen}
           isPlaying={isPlaying}
