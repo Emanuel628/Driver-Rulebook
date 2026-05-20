@@ -7,39 +7,58 @@ type AudioPlayerProps = {
   theme: ThemeMode;
   title: string;
   isPlaying: boolean;
+  currentSegment: number;
+  totalSegments: number;
+  currentSegmentText: string;
   onPlayPause: () => void;
   onStop: () => void;
   onBack: () => void;
   onForward: () => void;
 };
 
-export function AudioPlayer({ theme, title, isPlaying, onPlayPause, onStop, onBack, onForward }: AudioPlayerProps) {
+export function AudioPlayer({
+  theme,
+  title,
+  isPlaying,
+  currentSegment,
+  totalSegments,
+  currentSegmentText,
+  onPlayPause,
+  onStop,
+  onBack,
+  onForward
+}: AudioPlayerProps) {
   const palette = colors[theme];
+  const safeTotal = Math.max(totalSegments, 1);
+  const progress = Math.min(((currentSegment + 1) / safeTotal) * 100, 100);
+  const segmentLabel = `${Math.min(currentSegment + 1, safeTotal)} / ${safeTotal}`;
 
   return (
     <View style={[styles.wrap, { backgroundColor: palette.surfaceRaised, borderColor: palette.border }]}> 
-      <Text style={[styles.caption, { color: palette.textSubtle }]}>Listening</Text>
+      <Text style={[styles.caption, { color: palette.textSubtle }]}>Listen Mode</Text>
       <Text numberOfLines={1} style={[styles.title, { color: palette.text }]}>{title}</Text>
       <View style={styles.trackRow}> 
-        <Text style={[styles.time, { color: palette.textSubtle }]}>0:00</Text>
+        <Text style={[styles.time, { color: palette.textSubtle }]}>{segmentLabel}</Text>
         <View style={[styles.track, { backgroundColor: palette.border }]}> 
-          <View style={[styles.trackFill, { backgroundColor: palette.accent }]} />
+          <View style={[styles.trackFill, { backgroundColor: palette.accent, width: `${progress}%` }]} />
         </View>
-        <Text style={[styles.time, { color: palette.textSubtle }]}>--:--</Text>
+        <Text style={[styles.time, { color: palette.textSubtle }]}>{isPlaying ? 'Playing' : 'Paused'}</Text>
       </View>
+      <Text numberOfLines={2} style={[styles.segmentText, { color: palette.textMuted }]}>{currentSegmentText}</Text>
       <View style={styles.controls}> 
         <Pressable onPress={onBack} style={styles.controlButton}> 
           <Ionicons name="play-back" size={22} color={palette.text} />
-          <Text style={[styles.controlLabel, { color: palette.textSubtle }]}>15</Text>
+          <Text style={[styles.controlLabel, { color: palette.textSubtle }]}>Back</Text>
         </Pressable>
         <Pressable onPress={onPlayPause} style={[styles.primaryButton, { backgroundColor: palette.accent }]}> 
           <Ionicons name={isPlaying ? 'pause' : 'play'} size={24} color="#FFFFFF" />
         </Pressable>
         <Pressable onPress={onStop} style={styles.controlButton}> 
           <Ionicons name="stop" size={22} color={palette.text} />
+          <Text style={[styles.controlLabel, { color: palette.textSubtle }]}>Stop</Text>
         </Pressable>
         <Pressable onPress={onForward} style={styles.controlButton}> 
-          <Text style={[styles.controlLabel, { color: palette.textSubtle }]}>15</Text>
+          <Text style={[styles.controlLabel, { color: palette.textSubtle }]}>Next</Text>
           <Ionicons name="play-forward" size={22} color={palette.text} />
         </Pressable>
       </View>
@@ -77,8 +96,12 @@ const styles = StyleSheet.create({
   },
   trackFill: {
     borderRadius: radius.pill,
-    height: 8,
-    width: '24%'
+    height: 8
+  },
+  segmentText: {
+    fontSize: 13,
+    fontWeight: '600',
+    lineHeight: 18
   },
   time: {
     fontSize: 12,
@@ -93,7 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 2,
-    minWidth: 46,
+    minWidth: 56,
     justifyContent: 'center'
   },
   controlLabel: {
