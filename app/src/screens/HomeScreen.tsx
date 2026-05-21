@@ -15,21 +15,21 @@ export function HomeScreen({ theme, onOpenPage }: HomeScreenProps) {
   return (
     <ScrollView style={[styles.screen, { backgroundColor: palette.bg }]} contentContainerStyle={styles.content}> 
       <View style={styles.hero}> 
-        <Text style={[styles.kicker, { color: palette.accent }]}>Local-first driver reference</Text>
-        <Text style={[styles.title, { color: palette.text }]}>Find the rule. Verify the source.</Text>
-        <Text style={[styles.subtitle, { color: palette.textMuted }]}>A plain-English guide for HOS, ELD, hazmat placards, GHS labels, SDS questions, dock disputes, and quick field checks.</Text>
+        <Text style={[styles.kicker, { color: palette.accent }]}>Pick what you need</Text>
+        <Text style={[styles.title, { color: palette.text }]}>What are you trying to check?</Text>
+        <Text style={[styles.subtitle, { color: palette.textMuted }]}>Tap the situation. Read the plain-English answer. Use the checklist. Open the official source if it matters.</Text>
       </View>
-
-      <InfoCard theme={theme} title="Always verify before acting" body="This app is a guide, not official training, legal advice, an ELD, or a replacement for current regulations, shipping papers, SDS documents, employer procedures, or qualified safety personnel." tone="warning" />
 
       <View style={styles.grid}> 
-        <TopicCard theme={theme} title="Start Here" subtitle="Index and basic terms" icon="compass-outline" onPress={() => onOpenPage('index-quick-start')} />
-        <TopicCard theme={theme} title="HOS / ELD" subtitle="Clocks, breaks, logs" icon="time-outline" onPress={() => onOpenPage('hos-basics')} />
-        <TopicCard theme={theme} title="Hazmat / Placards" subtitle="Shipping papers and displays" icon="diamond-outline" onPress={() => onOpenPage('hazmat-basics')} />
-        <TopicCard theme={theme} title="GHS / SDS" subtitle="Workplace chemical info" icon="document-text-outline" onPress={() => onOpenPage('ghs-basics')} />
-        <TopicCard theme={theme} title="Checklists" subtitle="Fast verification steps" icon="checkbox-outline" onPress={() => onOpenPage('checklists')} />
-        <TopicCard theme={theme} title="Scenarios" subtitle="Common real-world confusion" icon="alert-circle-outline" onPress={() => onOpenPage('scenario-examples')} />
+        <TopicCard theme={theme} title="Driving hours" subtitle="HOS clocks, breaks, resets" icon="time-outline" onPress={() => onOpenPage('hos-basics')} />
+        <TopicCard theme={theme} title="Placards" subtitle="Shipping papers, labels, IDs" icon="diamond-outline" onPress={() => onOpenPage('placard-decision-guide')} />
+        <TopicCard theme={theme} title="SDS / GHS" subtitle="Chemical labels and sheets" icon="document-text-outline" onPress={() => onOpenPage('ghs-vs-dot')} />
+        <TopicCard theme={theme} title="Dock argument" subtitle="When driver, freight, or papers disagree" icon="alert-circle-outline" onPress={() => onOpenPage('common-dock-arguments')} />
+        <TopicCard theme={theme} title="Quick checklist" subtitle="Step-by-step checks" icon="checkbox-outline" onPress={() => onOpenPage('checklists')} />
+        <TopicCard theme={theme} title="Official sources" subtitle="FMCSA, PHMSA, OSHA, eCFR" icon="shield-checkmark-outline" onPress={() => onOpenPage('sources-updates')} />
       </View>
+
+      <InfoCard theme={theme} title="Simple rule" body="This app points you to the right answer. It does not replace current regulations, shipping papers, SDS documents, employer procedures, or qualified safety personnel." tone="warning" />
     </ScrollView>
   );
 }
