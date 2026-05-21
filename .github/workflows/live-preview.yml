@@ -25,6 +25,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -36,6 +38,12 @@ jobs:
       - name: Build web preview
         working-directory: app
         run: npm run build:web
+
+      - name: Disable Jekyll
+        run: touch app/dist/.nojekyll
+
+      - name: Verify web artifact
+        run: test -f app/dist/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
