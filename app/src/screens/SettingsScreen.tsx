@@ -18,7 +18,7 @@ export function SettingsScreen({ theme, textSize, audioSpeed, onThemeChange, onT
   return (
     <ScrollView style={[styles.screen, { backgroundColor: palette.bg }]} contentContainerStyle={styles.content}> 
       <Text style={[styles.title, { color: palette.text }]}>Settings</Text>
-      <Text style={[styles.subtitle, { color: palette.textMuted }]}>Only the settings this app actually needs. Changes are saved locally on this device.</Text>
+      <Text style={[styles.subtitle, { color: palette.textMuted }]}>Display and Listen Mode settings. Changes are saved locally on this device.</Text>
 
       <SettingGroup theme={theme} title="Display">
         <Segment theme={theme} label="Theme" value={theme} options={['dark', 'light']} onChange={value => onThemeChange(value as ThemeMode)} />
@@ -29,8 +29,13 @@ export function SettingsScreen({ theme, textSize, audioSpeed, onThemeChange, onT
         <Segment theme={theme} label="Voice speed" value={audioSpeed} options={['0.75x', '1.0x', '1.25x', '1.5x']} onChange={value => onAudioSpeedChange(value as SettingsScreenProps['audioSpeed'])} />
       </SettingGroup>
 
+      <SettingGroup theme={theme} title="About this app">
+        <Text style={[styles.body, { color: palette.textMuted }]}>Driver Rulebook is a local-first educational reference for HOS, ELD, hazmat placards, GHS labels, SDS information, checklists, and common driver/dock situations.</Text>
+        <Text style={[styles.body, { color: palette.textMuted }]}>It does not require an account and stores preferences, saved pages, checklist progress, and saved content blocks locally on this device.</Text>
+      </SettingGroup>
+
       <SettingGroup theme={theme} title="Safety / Legal">
-        <Text style={[styles.body, { color: palette.textMuted }]}>Educational reference only. Not legal advice, not official training, and not an ELD.</Text>
+        <Text style={[styles.body, { color: palette.textMuted }]}>Educational reference only. Not legal advice, not official training, not an ELD, and not a replacement for current regulations, official sources, shipping papers, SDS documents, employer procedures, or qualified safety personnel.</Text>
       </SettingGroup>
     </ScrollView>
   );
