@@ -1,5 +1,5 @@
-import type { GuidePage } from '../types/content';
-import { drawerGroups, guidePages as baseGuidePages } from './pages';
+import type { DrawerGroup, GuidePage } from '../types/content';
+import { guidePages as baseGuidePages } from './pages';
 import { sixtySeventyRecapPage } from './chapter7';
 import { resetRestartPage } from './chapter8';
 import { sleeperBerthPage } from './chapter9';
@@ -66,4 +66,11 @@ export const guidePages: GuidePage[] = baseGuidePages.map(page => {
 
 export const guidePageMap = Object.fromEntries(guidePages.map(page => [page.id, page])) as Record<string, GuidePage>;
 
-export { drawerGroups };
+export const drawerGroups: DrawerGroup[] = [
+  { id: 'quick-start', title: 'Quick Start', pageIds: ['index-quick-start', 'basic-terms', 'sources-updates'] },
+  { id: 'hos', title: 'HOS / Driver Hours', pageIds: ['hos-basics', 'eleven-hour-rule', 'fourteen-hour-window', 'thirty-minute-break', 'sixty-seventy-recap', 'reset-restart', 'sleeper-berth', 'hos-exceptions', 'eld-basics'] },
+  { id: 'hazmat', title: 'Hazmat / Placards', pageIds: ['hazmat-basics', 'shipping-papers', 'labels-markings-placards', 'numbered-placards', 'bulk-vs-non-bulk', 'placard-decision-guide'] },
+  { id: 'ghs', title: 'GHS / SDS', pageIds: ['ghs-basics', 'ghs-pictograms', 'sds-explained', 'ghs-vs-dot'] },
+  { id: 'situations', title: 'Common Situations', pageIds: ['common-dock-arguments', 'scenario-examples'] },
+  { id: 'tools', title: 'Tools', pageIds: ['checklists', 'glossary'] }
+];
