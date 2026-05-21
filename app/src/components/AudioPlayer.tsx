@@ -31,18 +31,19 @@ export function AudioPlayer({
   const palette = colors[theme];
   const safeTotal = Math.max(totalSegments, 1);
   const progress = Math.min(((currentSegment + 1) / safeTotal) * 100, 100);
-  const segmentLabel = `${Math.min(currentSegment + 1, safeTotal)} / ${safeTotal}`;
+  const segmentLabel = `${Math.min(currentSegment + 1, safeTotal)} of ${safeTotal}`;
 
   return (
     <View style={[styles.wrap, { backgroundColor: palette.surfaceRaised, borderColor: palette.border }]}> 
-      <Text style={[styles.caption, { color: palette.textSubtle }]}>Listen Mode</Text>
+      <Text style={[styles.caption, { color: palette.textSubtle }]}>Read aloud</Text>
       <Text numberOfLines={1} style={[styles.title, { color: palette.text }]}>{title}</Text>
+      <Text style={[styles.helper, { color: palette.textMuted }]}>Uses your phone’s built-in voice. Change the voice quality in iOS or Android accessibility/speech settings.</Text>
       <View style={styles.trackRow}> 
         <Text style={[styles.time, { color: palette.textSubtle }]}>{segmentLabel}</Text>
         <View style={[styles.track, { backgroundColor: palette.border }]}> 
           <View style={[styles.trackFill, { backgroundColor: palette.accent, width: `${progress}%` }]} />
         </View>
-        <Text style={[styles.time, { color: palette.textSubtle }]}>{isPlaying ? 'Playing' : 'Paused'}</Text>
+        <Text style={[styles.time, { color: palette.textSubtle }]}>{isPlaying ? 'Reading' : 'Stopped'}</Text>
       </View>
       <Text numberOfLines={2} style={[styles.segmentText, { color: palette.textMuted }]}>{currentSegmentText}</Text>
       <View style={styles.controls}> 
@@ -82,6 +83,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '900'
+  },
+  helper: {
+    fontSize: 13,
+    fontWeight: '600',
+    lineHeight: 18
   },
   trackRow: {
     alignItems: 'center',
