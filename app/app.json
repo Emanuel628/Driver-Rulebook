@@ -22,10 +22,14 @@
       }
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "output": "single"
+    },
+    "experiments": {
+      "baseUrl": "/Driver-Rulebook"
     },
     "extra": {
-      "projectStatus": "skeleton"
+      "projectStatus": "content-complete"
     }
   }
 }
